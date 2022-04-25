@@ -39,18 +39,17 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(string(b)) < 10 &&
-			strings.Contains(string(b), ".") != true &&
-			strings.Contains(string(b), "://") != true &&
-			strings.Contains(string(b), "http") != true {
+			!strings.Contains(string(b), ".") &&
+			!strings.Contains(string(b), "://") &&
+			!strings.Contains(string(b), "http") {
 			w.WriteHeader(http.StatusBadRequest)
 			return
-
 		}
 
 		a := storage.DataPut{Url1: string(b)}
 		int_out, err := a.PutDB()
 		if err != nil {
-			fmt.Println(`ERR storage DataPut`)
+			fmt.Println(`err storage storage.DataPut`)
 		}
 
 		w.Header().Set("content-type", "http")
