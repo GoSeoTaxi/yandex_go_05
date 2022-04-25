@@ -19,7 +19,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		idGetQuery := storage.DataGet{IdUrlRedirect: idInput}
+		idGetQuery := storage.DataGet{IDURLRedirect: idInput}
 		urlOut2redir, err := idGetQuery.GetDB()
 		if err != nil {
 			fmt.Println(`ERR storage DataGet`)
@@ -39,23 +39,22 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(string(b)) < 10 &&
-			strings.Contains(string(b), ".") != true &&
-			strings.Contains(string(b), "://") != true &&
-			strings.Contains(string(b), "http") != true {
+			!strings.Contains(string(b), ".") &&
+			!strings.Contains(string(b), "://") &&
+			!strings.Contains(string(b), "http") {
 			w.WriteHeader(http.StatusBadRequest)
 			return
-
 		}
 
-		a := storage.DataPut{Url1: string(b)}
-		int_out, err := a.PutDB()
+		a := storage.DataPut{URL1: string(b)}
+		intOut, err := a.PutDB()
 		if err != nil {
-			fmt.Println(`ERR storage DataPut`)
+			fmt.Println(`err storage storage.DataPut`)
 		}
 
 		w.Header().Set("content-type", "http")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte(MakeString(strconv.Itoa(int_out))))
+		w.Write([]byte(MakeString(strconv.Itoa(intOut))))
 		return
 	} else {
 		w.WriteHeader(http.StatusBadRequest)

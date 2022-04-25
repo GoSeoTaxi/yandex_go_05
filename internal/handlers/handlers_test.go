@@ -19,7 +19,7 @@ func TestMainHandlFunc(t *testing.T) {
 
 	//проверка на ошибку по пустой базе
 	idTest := "0"
-	stringRequest1 := config.Server_host + ":" + config.Port + "/?" + config.ConstGetEndPoint + "=" + idTest
+	stringRequest1 := config.ServerHost + ":" + config.Port + "/?" + config.ConstGetEndPoint + "=" + idTest
 	req1, err := http.NewRequest(http.MethodGet, stringRequest1, nil)
 	if err != nil {
 		t.Fatalf("not req :%v", err)
@@ -34,7 +34,7 @@ func TestMainHandlFunc(t *testing.T) {
 
 	//проверка post Запроса
 
-	stringRequest2 := config.Server_host + ":" + config.Port + "/"
+	stringRequest2 := config.ServerHost + ":" + config.Port + "/"
 
 	buffer := new(bytes.Buffer)
 	params := url.Values{}
