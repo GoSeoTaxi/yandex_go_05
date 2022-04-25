@@ -19,7 +19,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		idGetQuery := storage.DataGet{IdUrlRedirect: idInput}
+		idGetQuery := storage.DataGet{IdURLRedirect: idInput}
 		urlOut2redir, err := idGetQuery.GetDB()
 		if err != nil {
 			fmt.Println(`ERR storage DataGet`)
@@ -46,7 +46,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		a := storage.DataPut{Url1: string(b)}
+		a := storage.DataPut{URL1: string(b)}
 		intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
