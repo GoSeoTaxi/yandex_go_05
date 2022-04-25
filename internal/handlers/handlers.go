@@ -47,14 +47,14 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 		}
 
 		a := storage.DataPut{Url1: string(b)}
-		int_out, err := a.PutDB()
+		intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
 		}
 
 		w.Header().Set("content-type", "http")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte(MakeString(strconv.Itoa(int_out))))
+		w.Write([]byte(MakeString(strconv.Itoa(intOut))))
 		return
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
