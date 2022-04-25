@@ -10,7 +10,7 @@ type DataPut struct {
 }
 
 type DataGet struct {
-	IdURLRedirect int
+	IDURLRedirect int
 }
 
 //Хранение значений
@@ -24,5 +24,5 @@ func (d DataPut) PutDB() (out int, err error) {
 }
 
 func (dDG DataGet) GetDB() (url2Redirect string, err error) {
-	return bd[dDG.IdURLRedirect], err
+	return bd[dDG.IDURLRedirect], err
 }
