@@ -6,11 +6,11 @@ type Storage interface {
 }
 
 type DataPut struct {
-	Url1 string
+	URL1 string
 }
 
 type DataGet struct {
-	IdUrlRedirect int
+	IDURLRedirect int
 }
 
 //Хранение значений
@@ -19,10 +19,10 @@ var index int
 
 func (d DataPut) PutDB() (out int, err error) {
 	index = len(bd)
-	bd[index] = d.Url1
+	bd[index] = d.URL1
 	return index, err
 }
 
 func (dDG DataGet) GetDB() (url2Redirect string, err error) {
-	return bd[dDG.IdUrlRedirect], err
+	return bd[dDG.IDURLRedirect], err
 }
