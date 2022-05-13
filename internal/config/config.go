@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -29,5 +30,7 @@ func LoadConfig(adr, path string) {
 	}
 
 	ConstGetEndPoint = "id"
+
+	fmt.Println(`I am Starting ` + `server ` + ServerHost + ` port - ` + Port + ` path - ` + PathURLConf + ` endPoint - ?` + ConstGetEndPoint + `=`)
 
 }
