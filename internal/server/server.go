@@ -10,7 +10,7 @@ import (
 func MainServer() {
 
 	r := chi.NewRouter()
-	r.Get("/", handlers.MainHandlFunc)
+	r.Get(config.PathURLConf, handlers.MainHandlFunc)
 	r.Post("/", handlers.MainHandlFunc)
 	r.Post("/api/shorten", handlers.ApiJson)
 	http.ListenAndServe(":"+config.Port, r)

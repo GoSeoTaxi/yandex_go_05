@@ -69,6 +69,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 
 		idInput, err := strconv.Atoi(r.URL.Query().Get("id"))
 		if err != nil {
+			fmt.Println(`ERR - GET id`)
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
