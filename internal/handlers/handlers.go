@@ -6,8 +6,8 @@ import (
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
-	"strings"
 )
 
 func ApiJson(w http.ResponseWriter, r *http.Request) {
@@ -29,16 +29,28 @@ func ApiJson(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if len(apiJsonInput.Url) < 10 ||
-			!json.Valid([]byte(b)) ||
-			!strings.Contains(apiJsonInput.Url, ".") ||
-			!strings.Contains(apiJsonInput.Url, "://") ||
-			!strings.Contains(apiJsonInput.Url, "http") {
+		urlP, err := url.Parse(apiJsonInput.Url)
+		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		a := storage.DataPut{URL1: apiJsonInput.Url}
+		if len(urlP.String()) < 10 ||
+			!json.Valid([]byte(b)) {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		//		if len(apiJsonInput.Url) < 10 ||
+		//			!json.Valid([]byte(b)) ||
+		//			!strings.Contains(apiJsonInput.Url, ".") ||
+		//			!strings.Contains(apiJsonInput.Url, "://") ||
+		//			!strings.Contains(apiJsonInput.Url, "http") {
+		//			w.WriteHeader(http.StatusBadRequest)
+		//			return
+		//		}
+
+		a := storage.DataPut{URL1: urlP.String()}
 		intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
@@ -93,15 +105,18 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if len(string(b)) < 10 ||
-			!strings.Contains(string(b), ".") ||
-			!strings.Contains(string(b), "%3A%2F%2F") ||
-			!strings.Contains(string(b), "http") {
+		if len(string(b)) < 10 {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		a := storage.DataPut{URL1: string(b)}
+		urlP, err := url.Parse(string(b))
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		a := storage.DataPut{URL1: urlP.String()}
 		intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
