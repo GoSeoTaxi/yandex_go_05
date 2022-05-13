@@ -50,8 +50,9 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		//			return
 		//		}
 
-		a := storage.DataPut{URL1: urlP.String()}
-		intOut, err := a.PutDB()
+		//	a := storage.DataPut{URL1: urlP.String()}
+		intOut, err := storage.PutDB(urlP.String())
+		//	intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
 		}
@@ -86,8 +87,9 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		idGetQuery := storage.DataGet{IDURLRedirect: idInput}
-		urlOut2redir, err := idGetQuery.GetDB()
+		//	idGetQuery := storage.DataGet{IDURLRedirect: idInput}
+		//	urlOut2redir, err := idGetQuery.GetDB()
+		urlOut2redir, err := storage.GetDB(idInput)
 		if err != nil {
 			fmt.Println(`ERR storage DataGet`)
 		}
@@ -116,8 +118,9 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		a := storage.DataPut{URL1: urlP.String()}
-		intOut, err := a.PutDB()
+		//		a := storage.DataPut{URL1: urlP.String()}
+
+		intOut, err := storage.PutDB(urlP.String())
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
 		}
