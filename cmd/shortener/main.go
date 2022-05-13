@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	SERVER_ADDRESS := "127.0.0.1:8081"
-	BASE_URL := "/base/"
+	SERVER_ADDRESS := "127.0.0.1:8080"
+	BASE_URL := "/"
 
 	config.LoadConfig(SERVER_ADDRESS, BASE_URL)
 	server.MainServer()

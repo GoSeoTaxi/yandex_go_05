@@ -12,12 +12,12 @@ var PathURLConf string
 func LoadConfig(adr, path string) {
 
 	if len(adr) < 9 {
-		ServerHost = "127.0.0.1"
+		ServerHost = "http://" + "127.0.0.1"
 		Port = "8080"
 	} else {
 
 		str := strings.Split(adr, ":")
-		ServerHost = str[0]
+		ServerHost = "http://" + str[0]
 		Port = str[1]
 
 	}
