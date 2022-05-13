@@ -121,7 +121,7 @@ func TestApiJson(t *testing.T) {
 	if cointTestsTestApiJson != testsTestApiJson {
 		t.Fatalf("testing is not ok coint=%v , need=%v", cointTestsTestApiJson, testsTestApiJson)
 	} else {
-		fmt.Println(`TEST-OK-HANDLERS`)
+		fmt.Println(`TEST-OK-HANDLERS-JSON`)
 	}
 
 }
@@ -215,7 +215,7 @@ func TestMainHandlFunc(t *testing.T) {
 	if cointTests != tests {
 		t.Fatalf("testing is not ok coint=%v , need=%v", cointTests, tests)
 	} else {
-		fmt.Println(`TEST-OK-HANDLERS`)
+		fmt.Println(`TEST-OK-HANDLERS-MAIN`)
 	}
 
 }

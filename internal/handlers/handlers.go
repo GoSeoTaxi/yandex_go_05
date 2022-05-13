@@ -53,7 +53,7 @@ func ApiJson(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		w.Header().Set("content-type", "http")
+		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		w.Write(urlOutbyte)
 		return
