@@ -12,23 +12,21 @@ var PathURLConf string
 
 func LoadConfig(adr, path string) {
 
-	if len(adr) < 9 {
-		ServerHost = "http://" + "127.0.0.1"
+	if len(adr) < 2 {
 		Port = "8080"
 	} else {
-
-		str := strings.Split(adr, ":")
-		ServerHost = "http://" + str[0]
-		Port = str[1]
-
+		strAdr := strings.Split(adr, ":")
+		Port = strAdr[1]
 	}
 
-	if len(path) < 1 {
-		PathURLConf = "/"
+	if len(path) < 16 {
+		ServerHost = "http://localhost"
 	} else {
-		PathURLConf = path
+		strPath := strings.Split(path, ":")
+		Port = strPath[2]
+		ServerHost = strPath[0] + ":" + strPath[1]
 	}
-
+	PathURLConf = "/"
 	ConstGetEndPoint = "id"
 
 	fmt.Println(`I am Starting ` + `server ` + ServerHost + ` port - ` + Port + ` path - ` + PathURLConf + ` endPoint - ?` + ConstGetEndPoint + `=`)
