@@ -69,13 +69,13 @@ func TestApiJson(t *testing.T) {
 	}
 	var apiJsonInput resJSON
 
-	_ = json.Unmarshal(t21.Bytes(), &apiJsonInput)
-	if err != nil {
+	errJ := json.Unmarshal(t21.Bytes(), &apiJsonInput)
+	if errJ != nil {
 		fmt.Println(`err t3.TestApiJson!`)
 	}
 
-	req3, err := http.NewRequest(http.MethodGet, apiJsonInput.Url, nil)
-	if err != nil {
+	req3, err1 := http.NewRequest(http.MethodGet, apiJsonInput.Url, nil)
+	if err1 != nil {
 		fmt.Println(`err t3.TestApiJson!!`)
 	}
 	rec3 := httptest.NewRecorder()
