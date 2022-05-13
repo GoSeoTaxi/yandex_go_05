@@ -74,14 +74,12 @@ func TestApiJson(t *testing.T) {
 	err = json.Unmarshal(stringRequest3Byte, &apiJsonInput)
 	if err != nil {
 		fmt.Println(`err t3.TestApiJson!`)
-		return
 	}
 
 	stringRequest3 := apiJsonInput.Url
 	req3, err := http.NewRequest(http.MethodGet, stringRequest3, nil)
 	if err != nil {
 		fmt.Println(`err t3.TestApiJson!!`)
-		t.Fatalf("not req :%v", err)
 	}
 	rec3 := httptest.NewRecorder()
 	MainHandlFunc(rec3, req3)
