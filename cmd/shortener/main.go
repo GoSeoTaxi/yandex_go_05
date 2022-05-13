@@ -10,6 +10,5 @@ import (
 func main() {
 	config.LoadConfig(os.Getenv("SERVER_ADDRESS"), os.Getenv("BASE_URL"))
 	storage.ResoreDB(os.Getenv("FILE_STORAGE_PATH"))
-
 	server.MainServer()
 }

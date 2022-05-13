@@ -28,23 +28,23 @@ var index int
 var fileNameDB string
 
 func ResoreDB(fileName string) (status string, err error) {
-	fmt.Println(fileName + `ПРоверка что файл передаётся`)
 	if len(fileName) < 1 {
 		status = "NO FILE"
 		return status, err
 	}
+	fmt.Println(`ПРоверка что файл передаётся _ ` + fileName)
 
 	file, err := os.Open(fileName)
+	defer file.Close()
 	if err != nil {
 		f, err := os.Create(fileName)
+		defer f.Close()
 		if err != nil {
 			fmt.Println(`ERR - create file`)
 			panic(err)
 		}
 		return "newCreate", err
-		defer f.Close()
 	}
-	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	fileNameDB = fileName
@@ -56,6 +56,7 @@ func ResoreDB(fileName string) (status string, err error) {
 	}
 
 	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
 		return status, err
 	}
 
@@ -65,7 +66,7 @@ func ResoreDB(fileName string) (status string, err error) {
 //Функция дозаписи в файл
 func writeFile(indInt int, data string) {
 	f, _ := os.OpenFile(fileNameDB, os.O_APPEND|os.O_WRONLY, 0600)
-	f.WriteString("\n" + strconv.Itoa(indInt) + "|" + data)
+	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
 	defer f.Close()
 }
 
