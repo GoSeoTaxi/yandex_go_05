@@ -16,12 +16,12 @@ func TestApiJson(t *testing.T) {
 
 	config.LoadConfig("", "")
 
-	const testsTestApiJson = 4
-	urlTestTestApiJson := `{"url":"https://gmail.com"}`
-	urlTestTestApiJsonReq := "https://gmail.com"
-	urlTestTestApiRequest := `1` //переменная для теста json
+	const testsTestAPIJSON = 4
+	urlTestTestAPIJSON := `{"url":"https://gmail.com"}`
+	urlTestTestAPIJSONReq := "https://gmail.com"
+	urlTestTestAPIRequest := `1` //переменная для теста json
 
-	cointTestsTestApiJson := 0
+	cointTestsTestAPIJSON := 0
 
 	//проверка на ошибку по пустой базе
 	idTest := "0"
@@ -33,7 +33,7 @@ func TestApiJson(t *testing.T) {
 	rec1 := httptest.NewRecorder()
 	ApiJson(rec1, req1)
 	if rec1.Code == http.StatusBadRequest {
-		cointTestsTestApiJson += 1
+		cointTestsTestAPIJSON += 1
 	} else {
 		fmt.Println(`err t1.TestApiJson`)
 	}
@@ -41,11 +41,11 @@ func TestApiJson(t *testing.T) {
 	//проверка post Запроса
 	stringRequest2 := config.ServerHost + ":" + config.Port + config.PathURLConf + "?" + config.ConstGetEndPoint + "=" + idTest
 
-	urlTestTestApiRequest = `{"result":"` + stringRequest2 + `"}`
+	urlTestTestAPIRequest = `{"result":"` + stringRequest2 + `"}`
 
 	buffer := new(bytes.Buffer)
 
-	buffer.WriteString(urlTestTestApiJson)
+	buffer.WriteString(urlTestTestAPIJSON)
 
 	req2, err := http.NewRequest(http.MethodPost, stringRequest2, buffer)
 	req2.Header.Set("content-type", "application/json")
@@ -57,8 +57,8 @@ func TestApiJson(t *testing.T) {
 	ApiJson(rec2, req2)
 	t21 := rec2.Body
 
-	if t21.String() == urlTestTestApiRequest && rec2.Code == http.StatusCreated {
-		cointTestsTestApiJson += 1
+	if t21.String() == urlTestTestAPIRequest && rec2.Code == http.StatusCreated {
+		cointTestsTestAPIJSON += 1
 	} else {
 		fmt.Println(`err t2.TestApiJson!!`)
 	}
@@ -81,13 +81,13 @@ func TestApiJson(t *testing.T) {
 	rec3 := httptest.NewRecorder()
 	MainHandlFunc(rec3, req3)
 
-	//	strEq1 := "<a href=" + url.QueryEscape(urlTestTestApiJsonReq) + "\">Temporary Redirect</a>."
+	//	strEq1 := "<a href=" + url.QueryEscape(urlTestTestAPIJSONReq) + "\">Temporary Redirect</a>."
 	//Вот тут нужно почитать по подробнее
-	strEq1 := "<a href=\"" + urlTestTestApiJsonReq + "\">Temporary Redirect</a>."
+	strEq1 := "<a href=\"" + urlTestTestAPIJSONReq + "\">Temporary Redirect</a>."
 	t31 := rec3.Body
 
 	if rec3.Code == http.StatusTemporaryRedirect && strings.Contains(t31.String(), strEq1) == true {
-		cointTestsTestApiJson += 1
+		cointTestsTestAPIJSON += 1
 	} else {
 		fmt.Println(`err t3.TestApiJson!!!`)
 	}
@@ -109,14 +109,14 @@ func TestApiJson(t *testing.T) {
 	ApiJson(rec4, req4)
 
 	if rec4.Code == http.StatusBadRequest {
-		cointTestsTestApiJson += 1
+		cointTestsTestAPIJSON += 1
 	} else {
 		fmt.Println(`err t4.TestApiJson`)
 	}
 
 	// проверка результатов подтеста
-	if cointTestsTestApiJson != testsTestApiJson {
-		t.Fatalf("testing is not ok coint=%v , need=%v", cointTestsTestApiJson, testsTestApiJson)
+	if cointTestsTestAPIJSON != testsTestAPIJSON {
+		t.Fatalf("testing is not ok coint=%v , need=%v", cointTestsTestAPIJSON, testsTestAPIJSON)
 	} else {
 		fmt.Println(`TEST-OK-HANDLERS-JSON`)
 	}
