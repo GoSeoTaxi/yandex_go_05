@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func ApiJson(w http.ResponseWriter, r *http.Request) {
+func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		b, err := io.ReadAll(r.Body)
@@ -20,16 +20,16 @@ func ApiJson(w http.ResponseWriter, r *http.Request) {
 		}
 
 		type urlInputJSON struct {
-			Url string `json:"url"`
+			URL string `json:"url"`
 		}
-		var apiJsonInput urlInputJSON
-		err = json.Unmarshal(b, &apiJsonInput)
+		var apiJSONInput urlInputJSON
+		err = json.Unmarshal(b, &apiJSONInput)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		urlP, err := url.Parse(apiJsonInput.Url)
+		urlP, err := url.Parse(apiJSONInput.URL)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -60,14 +60,14 @@ func ApiJson(w http.ResponseWriter, r *http.Request) {
 		urlOutMap := map[string]string{
 			"result": urlOut,
 		}
-		urlOutbyte, err := json.Marshal(urlOutMap)
+		urlOutByte, err := json.Marshal(urlOutMap)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		w.Write(urlOutbyte)
+		w.Write(urlOutByte)
 		return
 	} else {
 		w.WriteHeader(http.StatusBadRequest)

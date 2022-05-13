@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestApiJson(t *testing.T) {
+func TestAPIJSON(t *testing.T) {
 
 	config.LoadConfig("", "")
 
@@ -31,7 +31,7 @@ func TestApiJson(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec1 := httptest.NewRecorder()
-	ApiJson(rec1, req1)
+	APIJSON(rec1, req1)
 	if rec1.Code == http.StatusBadRequest {
 		cointTestsTestAPIJSON += 1
 	} else {
@@ -54,7 +54,7 @@ func TestApiJson(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec2 := httptest.NewRecorder()
-	ApiJson(rec2, req2)
+	APIJSON(rec2, req2)
 	t21 := rec2.Body
 
 	if t21.String() == urlTestTestAPIRequest && rec2.Code == http.StatusCreated {
@@ -65,16 +65,16 @@ func TestApiJson(t *testing.T) {
 
 	//проверка get Запроса по результату post ответа запроса
 	type resJSON struct {
-		Url string `json:"result"`
+		URL string `json:"result"`
 	}
-	var apiJsonInput resJSON
+	var apiJSONInput resJSON
 
-	errJ := json.Unmarshal(t21.Bytes(), &apiJsonInput)
+	errJ := json.Unmarshal(t21.Bytes(), &apiJSONInput)
 	if errJ != nil {
 		fmt.Println(`err t3.TestApiJson!`)
 	}
 
-	req3, err1 := http.NewRequest(http.MethodGet, apiJsonInput.Url, nil)
+	req3, err1 := http.NewRequest(http.MethodGet, apiJSONInput.URL, nil)
 	if err1 != nil {
 		fmt.Println(`err t3.TestApiJson!!`)
 	}
@@ -106,7 +106,7 @@ func TestApiJson(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec4 := httptest.NewRecorder()
-	ApiJson(rec4, req4)
+	APIJSON(rec4, req4)
 
 	if rec4.Code == http.StatusBadRequest {
 		cointTestsTestAPIJSON += 1
