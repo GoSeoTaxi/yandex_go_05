@@ -64,20 +64,17 @@ func TestApiJson(t *testing.T) {
 	}
 
 	//проверка get Запроса по результату post ответа запроса
-
-	stringRequest3Byte := t21.Bytes()
-
 	type resJSON struct {
 		Url string `json:"result"`
 	}
 	var apiJsonInput resJSON
-	err = json.Unmarshal(stringRequest3Byte, &apiJsonInput)
+
+	_ = json.Unmarshal(t21.Bytes(), &apiJsonInput)
 	if err != nil {
 		fmt.Println(`err t3.TestApiJson!`)
 	}
 
-	stringRequest3 := apiJsonInput.Url
-	req3, err := http.NewRequest(http.MethodGet, stringRequest3, nil)
+	req3, err := http.NewRequest(http.MethodGet, apiJsonInput.Url, nil)
 	if err != nil {
 		fmt.Println(`err t3.TestApiJson!!`)
 	}
