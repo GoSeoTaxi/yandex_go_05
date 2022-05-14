@@ -33,41 +33,42 @@ func ResoreDB(fileName string) (status string, err error) {
 		return status, err
 	}
 	fmt.Println(`ПРоверка что файл передаётся _ ` + fileName)
-
-	file, err := os.Open(fileName)
-	defer file.Close()
-	if err != nil {
-		f, err := os.Create(fileName)
-		defer f.Close()
-		if err != nil {
-			fmt.Println(`ERR - create file`)
-			panic(err)
-		}
-		return "newCreate", err
-	}
-
-	scanner := bufio.NewScanner(file)
 	fileNameDB = fileName
-
-	for scanner.Scan() {
-		inputMap := strings.Split(scanner.Text(), "|http")
-		intKEYDB, _ := strconv.Atoi(inputMap[0])
-		bd[intKEYDB] = "http" + inputMap[1]
-	}
-
-	if err := scanner.Err(); err != nil {
-		fmt.Println(err)
+	_, err = os.Stat(fileName)
+	if err != nil {
+		err := os.WriteFile(fileName, []byte("FILE_DB \n"), 0644)
+		if err != nil {
+			fmt.Printf("Unable to write file: %v", err)
+		}
+		status = "CREATED NEW FILE"
 		return status, err
 	}
 
+	file, err := os.Open(fileName)
+	if err != nil {
+		status = "err Open File"
+		return status, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		inputMap := strings.Split(scanner.Text(), "|http")
+		if len(inputMap) == 2 {
+			intKEYDB, _ := strconv.Atoi(inputMap[0])
+			bd[intKEYDB] = "http" + inputMap[1]
+		}
+	}
+	file.Close()
 	return status, err
 }
 
 //Функция дозаписи в файл
 func writeFile(indInt int, data string) {
 	f, _ := os.OpenFile(fileNameDB, os.O_APPEND|os.O_WRONLY, 0600)
-	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
 	defer f.Close()
+	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
+	return
 }
 
 func PutDB(str string) (out int, err error) {
