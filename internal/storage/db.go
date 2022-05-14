@@ -68,7 +68,6 @@ func writeFile(indInt int, data string) {
 	f, _ := os.OpenFile(fileNameDB, os.O_APPEND|os.O_WRONLY, 0600)
 	defer f.Close()
 	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
-	return
 }
 
 func PutDB(str string) (out int, err error) {
