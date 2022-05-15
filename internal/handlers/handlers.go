@@ -112,11 +112,18 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println(b)
+		fmt.Println(string(b))
+
 		urlP, err := url.Parse(string(b))
 		if err != nil {
-			w.WriteHeader(http.StatusGone)
+			fmt.Println(`err - parsing url`)
+			//		w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+
+		fmt.Println(urlP)
+		fmt.Println(urlP.String())
 
 		//		a := storage.DataPut{URL1: urlP.String()}
 
@@ -130,7 +137,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(MakeString(strconv.Itoa(intOut))))
 		return
 	} else {
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 }
