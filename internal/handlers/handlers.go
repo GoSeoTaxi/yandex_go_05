@@ -10,6 +10,17 @@ import (
 	"strconv"
 )
 
+func MiddlewarePostAPIJSON(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		//	log.Println("run MiddlewarePostAPIJSON")
+
+		//	http.Header.Add("Accept-Encoding", "gzip")
+		//	request.Header.Add("Accept-Encoding", "gzip")
+
+		next(w, r)
+	}
+}
+
 func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
