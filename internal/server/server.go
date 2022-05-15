@@ -31,8 +31,8 @@ func MainServer() {
 
 	r.Use(middleware.Compress(5, "gzip"))
 
-	r.Get(config.PathURLConf, handlers.MainHandlFunc)
-	r.Post(config.PathURLConf, handlers.MainHandlFunc)
+	r.Get(config.PathURLConf, handlers.MainHandlFuncGet)
+	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)
 
 	r.Post("/api/shorten", handlers.APIJSON)
 	http.ListenAndServe(":"+config.Port, r)
