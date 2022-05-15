@@ -107,14 +107,14 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if len(string(b)) < 0 {
-			w.WriteHeader(http.StatusForbidden)
+		if len(string(b)) < 10 {
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		urlP, err := url.Parse(string(b))
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusGone)
 			return
 		}
 
@@ -130,7 +130,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(MakeString(strconv.Itoa(intOut))))
 		return
 	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 }
