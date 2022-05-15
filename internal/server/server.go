@@ -10,7 +10,11 @@ import (
 
 func MainServer() {
 	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.Logger)
 	r.Use(middleware.Compress(5, "gzip"))
+
 	r.Get(config.PathURLConf, handlers.MainHandlFunc)
 	r.Post(config.PathURLConf, handlers.MainHandlFunc)
 	r.Post("/api/shorten", handlers.APIJSON)

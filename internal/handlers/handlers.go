@@ -112,25 +112,16 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println(`++++++`)
-		fmt.Println(b)
-		fmt.Println(string(b))
-
 		urlP, err := url.Parse(string(b))
 		if err != nil {
 			fmt.Println(`err - parsing url`)
-			//		w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		str1 := "0"
-
-		str1 = urlP.String()
-		str1 = string(b)
-
 		//		a := storage.DataPut{URL1: urlP.String()}
 
-		intOut, err := storage.PutDB(str1)
+		intOut, err := storage.PutDB(urlP.String())
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
 		}
