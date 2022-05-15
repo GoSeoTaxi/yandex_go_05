@@ -12,11 +12,7 @@ import (
 
 func MiddlewarePostAPIJSON(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//	log.Println("run MiddlewarePostAPIJSON")
-
-		//	http.Header.Add("Accept-Encoding", "gzip")
-		//	request.Header.Add("Accept-Encoding", "gzip")
-
+		//	Middleware
 		next(w, r)
 	}
 }
