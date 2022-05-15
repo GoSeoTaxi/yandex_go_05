@@ -120,12 +120,18 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 
 		urlP, err := url.Parse(string(b))
 		if err != nil {
+			fmt.Println(`++++++++++++`)
+			fmt.Println(`err - но parsing`)
+			fmt.Println(b)
+			fmt.Println(string(b))
+			fmt.Println(`++++++++++++`)
 			r := flate.NewReader(bytes.NewReader(b))
 			defer r.Close()
 			var b2 bytes.Buffer
 			// в переменную b записываются распакованные данные
 			_, err := b2.ReadFrom(r)
 			if err != nil {
+				fmt.Println(err)
 				fmt.Println(`err - decompress`)
 			}
 			fmt.Println(b2.Bytes())
