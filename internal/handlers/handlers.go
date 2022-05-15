@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"bytes"
+	"compress/flate"
 	"encoding/json"
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
@@ -111,8 +113,6 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println(string(b))
-
 		if len(string(b)) < 10 {
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -120,9 +120,22 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 
 		urlP, err := url.Parse(string(b))
 		if err != nil {
-			fmt.Println(`err - parsing url`)
-			w.WriteHeader(http.StatusBadRequest)
-			return
+			r := flate.NewReader(bytes.NewReader(b))
+			defer r.Close()
+			var b2 bytes.Buffer
+			// в переменную b записываются распакованные данные
+			_, err := b2.ReadFrom(r)
+			if err != nil {
+				fmt.Println(`err - decompress`)
+			}
+			fmt.Println(b2.Bytes())
+			fmt.Println(b2)
+			urlP, err = url.Parse(string(b2.Bytes()))
+			if err != nil {
+				fmt.Println(`err - parsing url b2`)
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
 		}
 
 		//		a := storage.DataPut{URL1: urlP.String()}
