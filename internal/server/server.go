@@ -8,7 +8,6 @@ import (
 )
 
 func MainServer() {
-
 	r := chi.NewRouter()
 	r.Use(middleware.Compress(5))
 	r.Get(config.PathURLConf, handlers.MainHandlFunc)
