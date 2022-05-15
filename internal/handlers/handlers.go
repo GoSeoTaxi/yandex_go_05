@@ -78,6 +78,10 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 
+	//oplog := httplog.LogEntry(r.Context())
+	//oplog.Printf(http.MethodPost)
+	//	oplog.Printf(r.Body)
+
 	if r.Method == http.MethodGet {
 
 		idInput, err := strconv.Atoi(r.URL.Query().Get("id"))
@@ -106,6 +110,8 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), 500)
 			return
 		}
+
+		fmt.Println(string(b))
 
 		if len(string(b)) < 10 {
 			w.WriteHeader(http.StatusBadRequest)
