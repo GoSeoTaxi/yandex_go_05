@@ -112,6 +112,7 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		fmt.Println(`++++++`)
 		fmt.Println(b)
 		fmt.Println(string(b))
 
@@ -122,12 +123,14 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println(urlP)
-		fmt.Println(urlP.String())
+		str1 := "0"
+
+		str1 = urlP.String()
+		str1 = string(b)
 
 		//		a := storage.DataPut{URL1: urlP.String()}
 
-		intOut, err := storage.PutDB(urlP.String())
+		intOut, err := storage.PutDB(str1)
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
 		}
