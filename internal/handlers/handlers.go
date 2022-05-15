@@ -107,8 +107,8 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if len(string(b)) < 10 {
-			w.WriteHeader(http.StatusBadRequest)
+		if len(string(b)) < 0 {
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 
