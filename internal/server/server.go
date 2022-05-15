@@ -10,9 +10,9 @@ import (
 
 func MainServer() {
 	r := chi.NewRouter()
-	r.Use(middleware.Compress(5))
+	r.Use(middleware.Compress(5, "gzip"))
 	r.Get(config.PathURLConf, handlers.MainHandlFunc)
-	r.Post("/", handlers.MainHandlFunc)
+	r.Post(config.PathURLConf, handlers.MainHandlFunc)
 	r.Post("/api/shorten", handlers.APIJSON)
 	http.ListenAndServe(":"+config.Port, r)
 
