@@ -12,8 +12,8 @@ func InitCLI() {
 	var baseURL string
 	var fileStoragePath string
 
-	flag.StringVar(&serverAddress, "a", ":8080", "SERVER_ADDRESS")
-	flag.StringVar(&baseURL, "b", "http://localhost:8080", "BASE_URL")
+	flag.StringVar(&serverAddress, "a", "localhost:8080", "SERVER_ADDRESS")
+	flag.StringVar(&baseURL, "b", ":8080", "BASE_URL")
 	flag.StringVar(&fileStoragePath, "f", "", "FILE_STORAGE_PATH")
 	flag.Parse()
 

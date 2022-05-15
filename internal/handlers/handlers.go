@@ -10,13 +10,6 @@ import (
 	"strconv"
 )
 
-func MiddlewarePostAPIJSON(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		//	Middleware
-		next(w, r)
-	}
-}
-
 func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
