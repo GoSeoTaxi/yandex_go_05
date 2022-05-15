@@ -125,18 +125,18 @@ func MainHandlFunc(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(b)
 			fmt.Println(string(b))
 			fmt.Println(`++++++++++++`)
-			r := flate.NewReader(bytes.NewReader(b))
-			defer r.Close()
+			rea := flate.NewReader(bytes.NewReader(b))
+			defer rea.Close()
 			var b2 bytes.Buffer
 			// в переменную b записываются распакованные данные
-			_, err := b2.ReadFrom(r)
+			_, err := b2.ReadFrom(rea)
 			if err != nil {
 				fmt.Println(err)
 				fmt.Println(`err - decompress`)
 			}
 			fmt.Println(b2.Bytes())
-			fmt.Println(b2)
-			urlP, err = url.Parse(string(b2.Bytes()))
+			fmt.Println(b2.String())
+			urlP, err = url.Parse(b2.String())
 			if err != nil {
 				fmt.Println(`err - parsing url b2`)
 				w.WriteHeader(http.StatusBadRequest)
