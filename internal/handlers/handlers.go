@@ -118,7 +118,6 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "http")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(MakeString(strconv.Itoa(intOut))))
-	return
 }
 
 func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
