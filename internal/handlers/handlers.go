@@ -90,13 +90,13 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//	if len(string(b)) < 10 {
-	//		w.WriteHeader(http.StatusBadRequest)
-	//		return
-	//	}
+	if len((b)) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	fmt.Println(`++++++++++++++++++++++`)
-	fmt.Println()
+	fmt.Println(r.Method)
 	fmt.Println(`++++++++++++++++++++++`)
 
 	urlP, err := url.Parse(string(b))
@@ -115,8 +115,10 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 			fmt.Println(`err - decompress`)
 		}
+		fmt.Println(`++!!++!!++!!++!!++!!+++`)
 		fmt.Println(b2.Bytes())
 		fmt.Println(b2.String())
+		fmt.Println(`++!!++!!++!!++!!++!!+++`)
 		urlP, err = url.Parse(b2.String())
 		if err != nil {
 			fmt.Println(`err - parsing url b2`)

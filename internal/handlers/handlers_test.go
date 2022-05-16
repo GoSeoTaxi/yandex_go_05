@@ -79,7 +79,7 @@ func TestAPIJSON(t *testing.T) {
 		fmt.Println(`err t3.TestApiJson!!`)
 	}
 	rec3 := httptest.NewRecorder()
-	MainHandlFunc(rec3, req3)
+	MainHandlFuncGet(rec3, req3)
 
 	//	strEq1 := "<a href=" + url.QueryEscape(urlTestTestAPIJSONReq) + "\">Temporary Redirect</a>."
 	//Вот тут нужно почитать по подробнее
@@ -123,7 +123,109 @@ func TestAPIJSON(t *testing.T) {
 
 }
 
-func TestMainHandlFunc(t *testing.T) {
+func TestMainHandlFuncPost(t *testing.T) {
+
+	const testsPost = 4
+	const urlTestPost = "https://ya.ru/"
+	cointTests := 0
+
+	fmt.Println(`++++++++!`)
+	//проверка на ошибку по пустой базе
+	idTest := "1"
+	stringRequest1 := config.ServerHost + ":" + config.Port + config.PathURLConf + "?" + config.ConstGetEndPoint + "=" + idTest
+	req1, err := http.NewRequest(http.MethodGet, stringRequest1, nil)
+	if err != nil {
+		t.Fatalf("not req :%v", err)
+	}
+	rec1 := httptest.NewRecorder()
+	MainHandlFuncGet(rec1, req1)
+	if rec1.Code == http.StatusBadRequest {
+		cointTests += 1
+	} else {
+		fmt.Println(`err t1.TestMainHandlFunc`)
+	}
+
+	//проверка post Запроса
+
+	fmt.Println(`++++++++!!`)
+
+	stringRequest2 := config.ServerHost + ":" + config.Port + config.PathURLConf
+
+	buffer := new(bytes.Buffer)
+	params := url.Values{}
+	params.Set("url", urlTestPost)
+	buffer.WriteString(params.Encode())
+
+	req2, err := http.NewRequest(http.MethodPost, stringRequest2, buffer)
+	req2.Header.Set("content-type", "application/x-www-form-urlencoded")
+	if err != nil {
+		t.Fatalf("not req :%v", err)
+	}
+	rec2 := httptest.NewRecorder()
+	MainHandlFuncPost(rec2, req2)
+
+	t21 := rec2.Body
+
+	if t21.String() == stringRequest1 && rec2.Code == http.StatusCreated {
+		cointTests += 1
+	} else {
+		fmt.Println(`err t2.TestMainHandlFunc`)
+	}
+
+	fmt.Println(`++++++++!!!`)
+
+	//проверка get Запроса по результату post ответа запроса
+	stringRequest3 := t21.String()
+	req3, err := http.NewRequest(http.MethodGet, stringRequest3, nil)
+	if err != nil {
+		t.Fatalf("not req :%v", err)
+	}
+	rec3 := httptest.NewRecorder()
+	MainHandlFuncGet(rec3, req3)
+
+	strEq1 := "<a href=\"/url=" + url.QueryEscape(urlTestPost) + "\">Temporary Redirect</a>."
+	t31 := rec3.Body
+
+	if rec3.Code == http.StatusTemporaryRedirect && strings.Contains(t31.String(), strEq1) == true {
+		cointTests += 1
+	} else {
+		fmt.Println(`err t3.TestMainHandlFunc`)
+	}
+
+	fmt.Println(`++++++++!!!!`)
+	//проверка на пустой post запрос
+
+	buffer4 := new(bytes.Buffer)
+	params4 := url.Values{}
+
+	buffer4.WriteString(params4.Encode())
+
+	req4, err := http.NewRequest(http.MethodPost, stringRequest2, buffer)
+	req4.Header.Set("content-type", "application/x-www-form-urlencoded")
+	if err != nil {
+		t.Fatalf("not req :%v", err)
+	}
+	rec4 := httptest.NewRecorder()
+	MainHandlFuncPost(rec4, req4)
+
+	if rec4.Code == http.StatusBadRequest {
+		cointTests += 1
+	} else {
+		fmt.Println(`err t4.TestMainHandlFunc`)
+	}
+
+	// проверка результатов подтеста
+	if cointTests != testsPost {
+		t.Fatalf("testing is not ok coint=%v , need=%v", cointTests, testsPost)
+	} else {
+		fmt.Println(`TEST-OK-HANDLERS-MAIN`)
+	}
+
+}
+
+/*
+
+func TestMainHandlFuncGet(t *testing.T) {
 
 	const tests = 4
 	const urlTest = "https://ya.ru/"
@@ -137,7 +239,7 @@ func TestMainHandlFunc(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec1 := httptest.NewRecorder()
-	MainHandlFunc(rec1, req1)
+	MainHandlFuncGet(rec1, req1)
 	if rec1.Code == http.StatusBadRequest {
 		cointTests += 1
 	} else {
@@ -159,7 +261,7 @@ func TestMainHandlFunc(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec2 := httptest.NewRecorder()
-	MainHandlFunc(rec2, req2)
+	MainHandlFuncGet(rec2, req2)
 
 	t21 := rec2.Body
 
@@ -177,7 +279,7 @@ func TestMainHandlFunc(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec3 := httptest.NewRecorder()
-	MainHandlFunc(rec3, req3)
+	MainHandlFuncGet(rec3, req3)
 
 	strEq1 := "<a href=\"/url=" + url.QueryEscape(urlTest) + "\">Temporary Redirect</a>."
 	t31 := rec3.Body
@@ -201,7 +303,7 @@ func TestMainHandlFunc(t *testing.T) {
 		t.Fatalf("not req :%v", err)
 	}
 	rec4 := httptest.NewRecorder()
-	MainHandlFunc(rec4, req4)
+	MainHandlFuncGet(rec4, req4)
 
 	if rec4.Code == http.StatusBadRequest {
 		cointTests += 1
@@ -217,3 +319,6 @@ func TestMainHandlFunc(t *testing.T) {
 	}
 
 }
+
+
+*/

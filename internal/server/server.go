@@ -29,7 +29,7 @@ func MainServer() {
 
 	r.Use(httplog.RequestLogger(logger))
 
-	r.Use(middleware.Compress(5, "gzip"))
+	r.Use(middleware.Compress(1, "gzip"))
 
 	r.Get(config.PathURLConf, handlers.MainHandlFuncGet)
 	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)
