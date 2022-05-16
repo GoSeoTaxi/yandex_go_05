@@ -52,6 +52,11 @@ func ResoreDB(fileName string) (status string, err error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+
+	fmt.Println(`++++++++++++`)
+	fmt.Println(`Читаю файл`)
+	fmt.Println(`++++++++++++`)
+
 	for scanner.Scan() {
 		inputMap := strings.Split(scanner.Text(), "|http")
 		if len(inputMap) == 2 {

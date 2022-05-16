@@ -33,7 +33,6 @@ func MainServer() {
 
 	r.Get(config.PathURLConf, handlers.MainHandlFuncGet)
 	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)
-
 	r.Post("/api/shorten", handlers.APIJSON)
 	http.ListenAndServe(":"+config.Port, r)
 

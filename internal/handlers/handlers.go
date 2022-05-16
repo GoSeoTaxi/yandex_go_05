@@ -90,10 +90,14 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(string(b)) < 10 {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	//	if len(string(b)) < 10 {
+	//		w.WriteHeader(http.StatusBadRequest)
+	//		return
+	//	}
+
+	fmt.Println(`++++++++++++++++++++++`)
+	fmt.Println()
+	fmt.Println(`++++++++++++++++++++++`)
 
 	urlP, err := url.Parse(string(b))
 	if err != nil {
