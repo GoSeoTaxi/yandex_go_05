@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"bytes"
-	"compress/flate"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
@@ -106,19 +106,15 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(b)
 		fmt.Println(string(b))
 		fmt.Println(`++++++++++++`)
-		rea := flate.NewReader(bytes.NewReader(b))
-		defer rea.Close()
-		var b2 bytes.Buffer
-		// в переменную b записываются распакованные данные
-		_, err := b2.ReadFrom(rea)
+
+		zr, err := gzip.NewReader(bytes.NewReader(b))
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println(`err - decompress`)
+			fmt.Println(`it is not gzip`)
 		}
-		fmt.Println(`++!!++!!++!!++!!++!!+++`)
-		fmt.Println(b2.Bytes())
-		fmt.Println(b2.String())
-		fmt.Println(`++!!++!!++!!++!!++!!+++`)
+		var b2 bytes.Buffer
+		b2.ReadFrom(zr)
+		zr.Close()
+
 		urlP, err = url.Parse(b2.String())
 		if err != nil {
 			fmt.Println(`err - parsing url b2`)
@@ -138,7 +134,6 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(MakeString(strconv.Itoa(intOut))))
 	return
-
 }
 
 func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
@@ -163,9 +158,9 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 
 	if len(urlOut2redir) > 2 {
 		http.Redirect(w, r, urlOut2redir, http.StatusTemporaryRedirect)
+		return
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	return
-
 }
