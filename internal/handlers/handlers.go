@@ -80,10 +80,6 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 
-	//oplog := httplog.LogEntry(r.Context())
-	//oplog.Printf(http.MethodPost)
-	//	oplog.Printf(r.Body)
-
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -95,22 +91,9 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(`++++++++++++++++++++++`)
-	fmt.Println(r.Method)
-	fmt.Println(`++++++++++++++++++++++`)
-
 	urlP, err := url.Parse(string(b))
 	if err != nil {
-		fmt.Println(`++++++++++++`)
-		fmt.Println(`err - но parsing`)
-		fmt.Println(b)
-		fmt.Println(string(b))
-		fmt.Println(`++++++++++++`)
-
-		zr, err := gzip.NewReader(bytes.NewReader(b))
-		if err != nil {
-			fmt.Println(`it is not gzip`)
-		}
+		zr, _ := gzip.NewReader(bytes.NewReader(b))
 		var b2 bytes.Buffer
 		b2.ReadFrom(zr)
 		zr.Close()
@@ -128,6 +111,8 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	intOut, err := storage.PutDB(urlP.String())
 	if err != nil {
 		fmt.Println(`err storage storage.DataPut`)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("content-type", "http")
