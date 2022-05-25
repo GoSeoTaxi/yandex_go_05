@@ -21,10 +21,6 @@ func Ungzip(h http.Handler) http.Handler {
 			http.Error(w, err.Error(), 500)
 			return
 		}
-		if len((b)) < 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
 
 		urlP, err := url.Parse(string(b))
 		if err != nil {
@@ -119,12 +115,12 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	/*
-		if len((b)) < 1 {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
 
+	if len((b)) < 10 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	/*
 		urlP, err := url.Parse(string(b))
 		if err != nil {
 			zr, _ := gzip.NewReader(bytes.NewReader(b))
@@ -146,6 +142,8 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	fmt.Println(urlP.String())
 
 	intOut, err := storage.PutDB(urlP.String())
 	if err != nil {
