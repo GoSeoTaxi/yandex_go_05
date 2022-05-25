@@ -7,10 +7,44 @@ import (
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
 )
+
+func Ungzip(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		b, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		if len((b)) < 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		urlP, err := url.Parse(string(b))
+		if err != nil {
+			zr, _ := gzip.NewReader(bytes.NewReader(b))
+			var b2 bytes.Buffer
+			b2.ReadFrom(zr)
+			zr.Close()
+
+			urlP, err = url.Parse(b2.String())
+			if err != nil {
+				fmt.Println(`err - parsing url b2`)
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+		}
+		r.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(urlP.String())))
+		h.ServeHTTP(w, r)
+
+	})
+}
 
 func APIJSON(w http.ResponseWriter, r *http.Request) {
 
@@ -85,28 +119,33 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
-	if len((b)) < 1 {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	urlP, err := url.Parse(string(b))
-	if err != nil {
-		zr, _ := gzip.NewReader(bytes.NewReader(b))
-		var b2 bytes.Buffer
-		b2.ReadFrom(zr)
-		zr.Close()
-
-		urlP, err = url.Parse(b2.String())
-		if err != nil {
-			fmt.Println(`err - parsing url b2`)
+	/*
+		if len((b)) < 1 {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-	}
 
-	//		a := storage.DataPut{URL1: urlP.String()}
+		urlP, err := url.Parse(string(b))
+		if err != nil {
+			zr, _ := gzip.NewReader(bytes.NewReader(b))
+			var b2 bytes.Buffer
+			b2.ReadFrom(zr)
+			zr.Close()
+
+			urlP, err = url.Parse(b2.String())
+			if err != nil {
+				fmt.Println(`err - parsing url b2`)
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+		}
+	*/
+	urlP, err := url.Parse(string(b))
+	if err != nil {
+		fmt.Println(`err - parsing url b2`)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	intOut, err := storage.PutDB(urlP.String())
 	if err != nil {
