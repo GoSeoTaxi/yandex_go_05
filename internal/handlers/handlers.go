@@ -201,8 +201,8 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 
-		w.WriteHeader(http.StatusOK)
 		w.Header().Set("content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		w.Write(j)
 		return
 	}
