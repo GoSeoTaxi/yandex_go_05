@@ -190,17 +190,15 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 	//links := []OutData{}
 	for k := range map1 {
 
-		links = append(links, OutData{ShortURL: strconv.Itoa(k), OriginalURL: map1[k]})
+		links = append(links, OutData{ShortURL: MakeString(strconv.Itoa(k)), OriginalURL: map1[k]})
 	}
 
 	j, err := json.Marshal(links)
-
 	if err != nil {
 		fmt.Println(`err-marshal`)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	} else {
-
 		w.Header().Set("content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(j)
