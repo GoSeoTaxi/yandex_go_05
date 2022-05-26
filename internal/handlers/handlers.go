@@ -13,6 +13,51 @@ import (
 	"strconv"
 )
 
+func SetCookies(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		//		fmt.Println(`GET`)
+
+		_, err := r.Cookie("login")
+		if err != nil {
+
+			//	fmt.Println(`ПУсто`)
+			token := getToken(24)
+			//			fmt.Println(`SET`)
+			cookie := http.Cookie{
+				Name:  "login",
+				Value: token,
+				Path:  "/",
+			}
+
+			http.SetCookie(w, &cookie)
+			r.AddCookie(&cookie)
+		} else {
+			//	fmt.Println(`НЕПусто` + log1.Value)
+			/*
+				status := storage.CheckLoginDB(log1.Value)
+				fmt.Println(status)
+				if status != "Y" {
+
+					token := getToken(24)
+					//			fmt.Println(`SET`)
+					cookie := http.Cookie{
+						Name:  "login",
+						Value: token,
+						Path:  "/",
+					}
+
+					http.SetCookie(w, &cookie)
+					r.AddCookie(&cookie)
+
+				}*/
+		}
+
+		h.ServeHTTP(w, r)
+
+	})
+}
+
 func Ungzip(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -73,6 +118,11 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		login, err := r.Cookie("login")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		//		if len(apiJsonInput.Url) < 10 ||
 		//			!json.Valid([]byte(b)) ||
 		//			!strings.Contains(apiJsonInput.Url, ".") ||
@@ -83,7 +133,8 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		//		}
 
 		//	a := storage.DataPut{URL1: urlP.String()}
-		intOut, err := storage.PutDB(urlP.String())
+
+		intOut, err := storage.PutDB(login.Value, urlP.String())
 		//	intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
@@ -108,6 +159,55 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	login, err := r.Cookie("login")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	map1 := make(map[int]string)
+	map1 = storage.GetDBLogin(login.Value)
+
+	//	fmt.Println(map1)
+
+	if len(map1) < 1 {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	type OutData struct {
+		Short_url    string `json:"short_url"`
+		Original_url string `json:"original_url"`
+	}
+	type linksData []OutData
+	var links linksData
+
+	//links := []OutData{}
+	for k := range map1 {
+
+		links = append(links, OutData{Short_url: strconv.Itoa(k), Original_url: map1[k]})
+	}
+
+	j, err := json.Marshal(links)
+
+	if err != nil {
+		fmt.Println(`err-marshal`)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write(j)
+		return
+	}
+
+	return
+}
+
 func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 
 	b, err := io.ReadAll(r.Body)
@@ -117,6 +217,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len((b)) < 10 {
+		fmt.Println(`URL -no correct`)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -136,6 +237,13 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	*/
+
+	login, err := r.Cookie("login")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	urlP, err := url.Parse(string(b))
 	if err != nil {
 		fmt.Println(`err - parsing url b2`)
@@ -143,9 +251,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(urlP.String())
-
-	intOut, err := storage.PutDB(urlP.String())
+	intOut, err := storage.PutDB(login.Value, urlP.String())
 	if err != nil {
 		fmt.Println(`err storage storage.DataPut`)
 		w.WriteHeader(http.StatusBadRequest)

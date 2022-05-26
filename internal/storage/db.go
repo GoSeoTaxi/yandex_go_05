@@ -9,9 +9,11 @@ import (
 )
 
 type Storage interface {
-	PutDB(data string) (int, error)
+	PutDB(user, data string) (int, error)
 	GetDB(idItem int) (string, error)
+	GetDBLogin(login string) map[int]string
 	ResoreDB(file string) error
+	CheckLoginDB(login string) string
 }
 
 //type DataPut struct {
@@ -24,6 +26,9 @@ type Storage interface {
 
 //Хранение значений
 var bd = map[int]string{}
+var useBD = map[string]map[int]string{}
+
+//var useBD = map[string]map[int]string{}
 var index int
 var fileNameDB string
 
@@ -75,9 +80,18 @@ func writeFile(indInt int, data string) {
 	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
 }
 
-func PutDB(str string) (out int, err error) {
+func PutDB(login, str string) (out int, err error) {
+
 	index = len(bd)
 	bd[index] = str
+
+	map1 := useBD[login]
+	if len(map1) == 0 {
+		map1 = make(map[int]string)
+	}
+	map1[index] = str
+	useBD[login] = map1
+
 	if fileNameDB != "" {
 		writeFile(index, str)
 	}
@@ -88,4 +102,22 @@ func PutDB(str string) (out int, err error) {
 
 func GetDB(id int) (url2Redirect string, err error) {
 	return bd[id], err
+}
+
+func GetDBLogin(loginInt string) (mapUrl map[int]string) {
+	mapUrl = useBD[loginInt]
+	//	fmt.Println(map1)
+	return mapUrl
+}
+
+func CheckLoginDB(login string) (status string) {
+
+	//	fmt.Println(login)
+	map1 := useBD[login]
+	//	fmt.Println(len(map1))
+	if len(map1) > 0 {
+		status = "Y"
+	}
+	//	fmt.Println(status)
+	return status
 }
