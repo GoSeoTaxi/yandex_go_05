@@ -104,10 +104,10 @@ func GetDB(id int) (url2Redirect string, err error) {
 	return bd[id], err
 }
 
-func GetDBLogin(loginInt string) (mapUrl map[int]string) {
-	mapUrl = useBD[loginInt]
+func GetDBLogin(loginInt string) (mapURL map[int]string) {
+	mapURL = useBD[loginInt]
 	//	fmt.Println(map1)
-	return mapUrl
+	return mapURL
 }
 
 func CheckLoginDB(login string) (status string) {
