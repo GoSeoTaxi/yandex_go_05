@@ -32,26 +32,26 @@ func SetCookies(h http.Handler) http.Handler {
 
 			http.SetCookie(w, &cookie)
 			r.AddCookie(&cookie)
-		} else {
-			//	fmt.Println(`НЕПусто` + log1.Value)
-			/*
-				status := storage.CheckLoginDB(log1.Value)
-				fmt.Println(status)
-				if status != "Y" {
+		} // else {
+		//	fmt.Println(`НЕПусто` + log1.Value)
+		/*
+			status := storage.CheckLoginDB(log1.Value)
+			fmt.Println(status)
+			if status != "Y" {
 
-					token := getToken(24)
-					//			fmt.Println(`SET`)
-					cookie := http.Cookie{
-						Name:  "login",
-						Value: token,
-						Path:  "/",
-					}
+				token := getToken(24)
+				//			fmt.Println(`SET`)
+				cookie := http.Cookie{
+					Name:  "login",
+					Value: token,
+					Path:  "/",
+				}
 
-					http.SetCookie(w, &cookie)
-					r.AddCookie(&cookie)
+				http.SetCookie(w, &cookie)
+				r.AddCookie(&cookie)
 
-				}*/
-		}
+			}*/
+		//	}
 
 		h.ServeHTTP(w, r)
 
@@ -170,8 +170,8 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	map1 := make(map[int]string)
-	map1 = storage.GetDBLogin(login.Value)
+	//	map1 := make(map[int]string)
+	map1 := storage.GetDBLogin(login.Value)
 
 	//	fmt.Println(map1)
 
@@ -181,8 +181,8 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type OutData struct {
-		Short_url    string `json:"short_url"`
-		Original_url string `json:"original_url"`
+		ShortURL    string `json:"short_url"`
+		OriginalURL string `json:"original_url"`
 	}
 	type linksData []OutData
 	var links linksData
@@ -190,7 +190,7 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 	//links := []OutData{}
 	for k := range map1 {
 
-		links = append(links, OutData{Short_url: strconv.Itoa(k), Original_url: map1[k]})
+		links = append(links, OutData{ShortURL: strconv.Itoa(k), OriginalURL: map1[k]})
 	}
 
 	j, err := json.Marshal(links)
@@ -200,12 +200,12 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	} else {
+
 		w.WriteHeader(http.StatusOK)
+		w.Header().Set("content-type", "application/json")
 		w.Write(j)
 		return
 	}
-
-	return
 }
 
 func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
