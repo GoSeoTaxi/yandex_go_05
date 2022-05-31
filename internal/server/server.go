@@ -24,6 +24,8 @@ func MainServer() {
 	r := chi.NewRouter()
 	r.Use(middleware.Compress(1, "gzip"))
 
+	r.Get("/ping", handlers.PingGet)
+
 	r.Get(config.PathURLConf, handlers.MainHandlFuncGet)
 	r.With(handlers.SetCookies).With(handlers.Ungzip).Post(config.PathURLConf, handlers.MainHandlFuncPost)
 	//	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)

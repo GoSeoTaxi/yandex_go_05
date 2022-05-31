@@ -9,6 +9,7 @@ var ServerHost string
 var Port string
 var ConstGetEndPoint string
 var PathURLConf string
+var DBStringConnect string
 
 func LoadConfig(adr, path string) {
 
