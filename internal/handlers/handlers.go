@@ -169,13 +169,17 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	var loginCookie string
 	login, err := r.Cookie("login")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		loginCookie = "anonimus"
+	} else {
+		loginCookie = login.Value
 	}
+
 	//	map1 := make(map[int]string)
-	map1 := storage.GetDBLogin(login.Value)
+	map1 := storage.GetDBLogin(loginCookie)
 
 	//	fmt.Println(map1)
 
@@ -243,8 +247,6 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	var loginCookie string
 	login, err := r.Cookie("login")
 	if err != nil {
-		//	w.WriteHeader(http.StatusBadRequest)
-		//	return
 		loginCookie = "anonimus"
 	} else {
 		loginCookie = login.Value
