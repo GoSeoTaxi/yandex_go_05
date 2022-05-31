@@ -16,18 +16,18 @@ import (
 func SetCookies(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		//		fmt.Println(`GET`)
+		fmt.Println(`GET`)
 
 		_, err := r.Cookie("login")
 		if err != nil {
 
-			//	fmt.Println(`ПУсто`)
+			fmt.Println(`ПУсто`)
 			token := getToken(24)
-			//			fmt.Println(`SET`)
+			fmt.Println(`SET`)
 			cookie := http.Cookie{
 				Name:  "login",
 				Value: token,
-				Path:  "/",
+				Path:  "*",
 			}
 
 			http.SetCookie(w, &cookie)
