@@ -34,6 +34,7 @@ func TestAPIJSON(t *testing.T) {
 	APIJSON(rec1, req1)
 	if rec1.Code == http.StatusBadRequest {
 		cointTestsTestAPIJSON += 1
+		fmt.Println(rec1.Code)
 	} else {
 		fmt.Println(`err t1.TestApiJson`)
 	}
@@ -60,6 +61,8 @@ func TestAPIJSON(t *testing.T) {
 	if t21.String() == urlTestTestAPIRequest && rec2.Code == http.StatusCreated {
 		cointTestsTestAPIJSON += 1
 	} else {
+		fmt.Println(urlTestTestAPIRequest)
+		fmt.Println(rec2.Code)
 		fmt.Println(`err t2.TestApiJson!!`)
 	}
 

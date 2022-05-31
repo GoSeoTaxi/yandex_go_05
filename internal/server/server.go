@@ -22,18 +22,13 @@ func MainServer() {
 	})
 	*/
 	r := chi.NewRouter()
-
-	//	r.Use(middleware.RequestID)
-	//	r.Use(middleware.Logger)
-	//	r.Use(httplog.RequestLogger(logger))
-
 	r.Use(middleware.Compress(1, "gzip"))
 
 	r.With(handlers.SetCookies).Get(config.PathURLConf, handlers.MainHandlFuncGet)
 	r.With(handlers.SetCookies).With(handlers.Ungzip).Post(config.PathURLConf, handlers.MainHandlFuncPost)
 	//	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)
-	r.With(handlers.Ungzip).Post("/api/shorten", handlers.APIJSON)
-	r.With(handlers.SetCookies).With(handlers.Ungzip).Get("/api/user/urls", handlers.GetAPIJSONLogin)
+	r.With(handlers.Ungzip).With(handlers.SetCookies).Post("/api/shorten", handlers.APIJSON)
+	r.With(handlers.Ungzip).With(handlers.SetCookies).Get("/api/user/urls", handlers.GetAPIJSONLogin)
 	http.ListenAndServe(":"+config.Port, r)
 
 }

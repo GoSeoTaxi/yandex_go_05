@@ -118,10 +118,14 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		var loginCookie string
 		login, err := r.Cookie("login")
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
+			//	w.WriteHeader(http.StatusBadRequest)
+			//	return
+			loginCookie = "anonimus"
+		} else {
+			loginCookie = login.Value
 		}
 		//		if len(apiJsonInput.Url) < 10 ||
 		//			!json.Valid([]byte(b)) ||
@@ -134,7 +138,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 		//	a := storage.DataPut{URL1: urlP.String()}
 
-		intOut, err := storage.PutDB(login.Value, urlP.String())
+		intOut, err := storage.PutDB(loginCookie, urlP.String())
 		//	intOut, err := a.PutDB()
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut`)
@@ -236,10 +240,14 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		}
 	*/
 
+	var loginCookie string
 	login, err := r.Cookie("login")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		//	w.WriteHeader(http.StatusBadRequest)
+		//	return
+		loginCookie = "anonimus"
+	} else {
+		loginCookie = login.Value
 	}
 
 	urlP, err := url.Parse(string(b))
@@ -249,7 +257,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	intOut, err := storage.PutDB(login.Value, urlP.String())
+	intOut, err := storage.PutDB(loginCookie, urlP.String())
 	if err != nil {
 		fmt.Println(`err storage storage.DataPut`)
 		w.WriteHeader(http.StatusBadRequest)
