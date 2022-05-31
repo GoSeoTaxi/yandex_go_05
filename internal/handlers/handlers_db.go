@@ -22,5 +22,4 @@ func PingGet(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	w.WriteHeader(http.StatusOK)
-	return
 }
