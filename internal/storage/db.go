@@ -2,11 +2,14 @@ package storage
 
 import (
 	"bufio"
+	"database/sql"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
+
+var StringConnect string
 
 type Storage interface {
 	PutDB(user, data string) (int, error)
@@ -14,6 +17,10 @@ type Storage interface {
 	GetDBLogin(login string) map[int]string
 	ResoreDB(file string) error
 	CheckLoginDB(login string) string
+}
+
+type countID struct {
+	count int
 }
 
 //type DataPut struct {
@@ -82,7 +89,32 @@ func writeFile(indInt int, data string) {
 
 func PutDB(login, str string) (out int, err error) {
 
-	index = len(bd)
+	db, err := sql.Open("postgres", StringConnect)
+	defer db.Close()
+	ping := db.Ping()
+	if len(StringConnect) > 1 && err == nil && ping == nil {
+
+		rowIDCount := db.QueryRow("select COUNT(id) from shortyp10")
+		prodID := countID{}
+		err = rowIDCount.Scan(&prodID.count)
+		if err != nil {
+			index = len(bd)
+		} else {
+			_, err := db.Exec("insert into shortyp10 (link, login) values ($1, $2)",
+				str, login)
+			if err != nil {
+				fmt.Println(`err put`)
+				index = len(bd)
+			} else {
+				//		fmt.Println(`use PUT db`)
+				index = prodID.count
+				//		fmt.Println(index)
+			}
+		}
+	} else {
+		index = len(bd)
+	}
+
 	bd[index] = str
 
 	map1 := useBD[login]
@@ -101,6 +133,7 @@ func PutDB(login, str string) (out int, err error) {
 }
 
 func GetDB(id int) (url2Redirect string, err error) {
+
 	return bd[id], err
 }
 

@@ -10,10 +10,10 @@ import (
 
 func PingGet(w http.ResponseWriter, r *http.Request) {
 
-	connStr := "user=postgres password=qwerty dbname=goyp sslmode=disable"
-	fmt.Println("DB string" + config.DBStringConnect)
+	//	connStr := "user=postgres password=qwerty dbname=goyp sslmode=disable"
+	//	fmt.Println("DB string" + config.DBStringConnect)
 
-	db, err := sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", config.DBStringConnect)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
