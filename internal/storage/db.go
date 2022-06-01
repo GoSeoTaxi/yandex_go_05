@@ -133,7 +133,6 @@ func PutDB(login, str string) (out int, err error) {
 }
 
 func GetDB(id int) (url2Redirect string, err error) {
-
 	return bd[id], err
 }
 
