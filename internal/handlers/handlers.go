@@ -107,14 +107,17 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		} else {
 			loginCookie = login.Value
 		}
-
+		var confl int
 		intOut, err := storage.PutDBUni(loginCookie, urlP.String())
 		if err != nil {
 			if err.Error() == "Conflict" {
-				w.Header().Set("content-type", "http")
-				w.WriteHeader(http.StatusConflict)
-				w.Write([]byte(MakeString(strconv.Itoa(intOut))))
-				return
+
+				confl = 1
+				//w.Header().Set("content-type", "http")
+				//w.WriteHeader(http.StatusConflict)
+				//w.Write([]byte(MakeString(strconv.Itoa(intOut))))
+				//return
+
 			} else {
 				fmt.Println(`err storage storage.DataPut`)
 				w.WriteHeader(http.StatusBadRequest)
@@ -132,7 +135,12 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusCreated)
+		if confl != 1 {
+			w.WriteHeader(http.StatusCreated)
+		} else {
+			w.WriteHeader(http.StatusConflict)
+		}
+
 		w.Write(urlOutByte)
 		return
 	} else {
