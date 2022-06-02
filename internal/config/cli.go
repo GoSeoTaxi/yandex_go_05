@@ -50,6 +50,9 @@ func InitCLI() {
 
 	//check DB
 	db, err := sql.Open("postgres", DBStringConnect)
+	if err != nil {
+		fmt.Println(`StaticTest - err`)
+	}
 	defer db.Close()
 	ping := db.Ping()
 

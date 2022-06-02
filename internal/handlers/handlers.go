@@ -299,3 +299,62 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
+
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	var loginCookie string
+	login, err := r.Cookie("login")
+	if err != nil {
+		loginCookie = "anonimus"
+	} else {
+		loginCookie = login.Value
+	}
+
+	type urlInputJSONLine struct {
+		TempID string `json:"correlation_id"`
+		OldURL string `json:"original_url"`
+	}
+	var linksBody []urlInputJSONLine
+	err = json.Unmarshal([]byte(b), &linksBody)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	type urlInputJSONLineNew struct {
+		TempIDNew string `json:"correlation_id"`
+		NewURL    string `json:"short_url"`
+	}
+	var linksBodyNew []urlInputJSONLineNew
+
+	for i := 0; i < len(linksBody); i++ {
+		linksBodyItem := linksBody[i]
+
+		var a1 urlInputJSONLineNew
+		a1.TempIDNew = linksBodyItem.TempID
+
+		intOut, err := storage.PutDB(loginCookie, linksBodyItem.OldURL)
+		if err != nil {
+			fmt.Println(`err storage storage.DataPut Api Batch`)
+		}
+		a1.NewURL = MakeString(strconv.Itoa(intOut))
+		linksBodyNew = append(linksBodyNew, a1)
+	}
+
+	fmt.Println(linksBodyNew)
+
+	urlOutByte, err := json.Marshal(linksBodyNew)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	w.Write(urlOutByte)
+
+}
