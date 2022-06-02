@@ -39,7 +39,7 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 	//fmt.Println("....Transaction committed\n")
 	//}
 
-	if idLinkLast != idLink {
+	if idLinkLast != idLink || idLink == 1 {
 		return idLinkLast, fmt.Errorf("Conflict")
 	}
 
