@@ -26,7 +26,8 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 
 		//	if err = tx.QueryRowContext(ctx, "select  last_value(id) over (order by id desc) from shortyp10 limit 1").Scan(&idLink); err != nil {
 		tx.Rollback()
-		fmt.Println("\n", (err), "\n ....Transaction rollback2!\n")
+		fmt.Println((err))
+		fmt.Println("Transaction rollback1!")
 		return 0, err
 	}
 	//	ansIns, err = tx.QueryRowContext(ctx, "INSERT INTO shortyp10 (link, login) values ($1, $2) ON CONFLICT DO NOTHING RETURNING id", link, login)
@@ -36,8 +37,8 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 	if err = tx.QueryRowContext(ctx, "INSERT INTO shortyp10(link, login) VALUES ($1, $2) ON CONFLICT (link)DO UPDATE SET link=$1 RETURNING id", link, login).Scan(&idLinkLast); err != nil {
 		//	if err = tx.QueryRowContext(ctx, "INSERT INTO shortyp10(link, login) VALUES ($1, $2) ON CONFLICT (link) DO nothing RETURNING id", link, login).Scan(&idLinkLast); err != nil {
 		tx.Rollback()
-		fmt.Println("\n", (err), "\n ....Transaction rollback1!\n")
-		fmt.Println(idLinkLast)
+		fmt.Println((err))
+		fmt.Println("Transaction rollback12")
 		return idLinkLast, err
 	}
 
@@ -45,16 +46,16 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 
 	if err = tx.QueryRowContext(ctx, "select  last_value(id) over (order by id desc) from shortyp10 limit 1").Scan(&idLink); err != nil {
 		tx.Rollback()
-		fmt.Println("\n", (err), "\n ....Transaction rollback2!\n")
+		fmt.Println((err))
+		fmt.Println("Transaction rollback3!")
 		return 0, err
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		fmt.Println("\n", (err), "\n ....Transaction err!\n")
-	} //else {
-	//fmt.Println("....Transaction committed\n")
-	//}
+		fmt.Println((err))
+		fmt.Println("Transaction rollback4!")
+	}
 
 	if idLinkLast != idLink || idLinkOld == idLink {
 		fmt.Println(`КОнфликт`)
