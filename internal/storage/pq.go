@@ -8,6 +8,9 @@ import (
 
 func PutPQ(link, login, stringConnect string) (int, error) {
 	db, err := sql.Open("postgres", StringConnect)
+	if err != nil {
+		fmt.Println(`err open sql`)
+	}
 	defer db.Close()
 
 	ctx := context.Background()
@@ -52,17 +55,6 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 	} //else {
 	//fmt.Println("....Transaction committed\n")
 	//}
-	fmt.Println(` `)
-	fmt.Println(` `)
-	fmt.Println(` `)
-	fmt.Println(` `)
-	fmt.Println(`+++++++++++++++`)
-	fmt.Println(idLinkOld)
-	fmt.Println(`id insert`)
-	fmt.Println(idLinkLast)
-	fmt.Println(`Последний`)
-	fmt.Println(idLink)
-	fmt.Println(`+++++++`)
 
 	if idLinkLast != idLink || idLinkOld == idLink {
 		fmt.Println(`КОнфликт`)

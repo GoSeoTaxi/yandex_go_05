@@ -144,6 +144,7 @@ func PutDBUni(login, str string) (out int, err error) {
 
 				return outInt, err
 			} else {
+				fmt.Println(err)
 				fmt.Println(`err - put dbpq`)
 			}
 
