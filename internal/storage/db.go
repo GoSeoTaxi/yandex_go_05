@@ -90,6 +90,9 @@ func writeFile(indInt int, data string) {
 func PutDB(login, str string) (out int, err error) {
 
 	db, err := sql.Open("postgres", StringConnect)
+	if err != nil {
+		fmt.Println(`err sql open`)
+	}
 	defer db.Close()
 	ping := db.Ping()
 	if len(StringConnect) > 1 && err == nil && ping == nil {
@@ -134,6 +137,9 @@ func PutDB(login, str string) (out int, err error) {
 
 func PutDBUni(login, str string) (out int, err error) {
 	db, err := sql.Open("postgres", StringConnect)
+	if err != nil {
+		fmt.Println(`err sql open`)
+	}
 	defer db.Close()
 	ping := db.Ping()
 	if len(StringConnect) > 1 && err == nil && ping == nil {
