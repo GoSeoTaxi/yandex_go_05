@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"os"
 	"strconv"
 	"strings"
@@ -80,7 +81,6 @@ func ResoreDB(fileName string) (status string, err error) {
 	return status, err
 }
 
-//Функция дозаписи в файл
 func writeFile(indInt int, data string) {
 	f, _ := os.OpenFile(fileNameDB, os.O_APPEND|os.O_WRONLY, 0600)
 	defer f.Close()
@@ -128,6 +128,44 @@ func PutDB(login, str string) (out int, err error) {
 		writeFile(index, str)
 	}
 	//Тут добавить условие, если переменная окружения с файлом больше 1, то записываем данные в файл через функцию
+
+	return index, err
+}
+
+func PutDBUni(login, str string) (out int, err error) {
+	db, err := sql.Open("postgres", StringConnect)
+	defer db.Close()
+	ping := db.Ping()
+	if len(StringConnect) > 1 && err == nil && ping == nil {
+
+		outInt, err := PutPQ(str, login, StringConnect)
+		if err != nil {
+			if err.Error() == "Conflict" {
+
+				return outInt, err
+			} else {
+				fmt.Println(`err - put dbpq`)
+			}
+
+		} else {
+			index = outInt
+		}
+	} else {
+		index = len(bd)
+	}
+
+	bd[index] = str
+
+	map1 := useBD[login]
+	if len(map1) == 0 {
+		map1 = make(map[int]string)
+	}
+	map1[index] = str
+	useBD[login] = map1
+
+	if fileNameDB != "" {
+		writeFile(index, str)
+	}
 
 	return index, err
 }

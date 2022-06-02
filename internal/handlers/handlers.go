@@ -32,27 +32,7 @@ func SetCookies(h http.Handler) http.Handler {
 
 			http.SetCookie(w, &cookie)
 			r.AddCookie(&cookie)
-		} // else {
-		//	fmt.Println(`НЕПусто` + log1.Value)
-		/*
-			status := storage.CheckLoginDB(log1.Value)
-			fmt.Println(status)
-			if status != "Y" {
-
-				token := getToken(24)
-				//			fmt.Println(`SET`)
-				cookie := http.Cookie{
-					Name:  "login",
-					Value: token,
-					Path:  "/",
-				}
-
-				http.SetCookie(w, &cookie)
-				r.AddCookie(&cookie)
-
-			}*/
-		//	}
-
+		}
 		h.ServeHTTP(w, r)
 
 	})
@@ -127,21 +107,19 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		} else {
 			loginCookie = login.Value
 		}
-		//		if len(apiJsonInput.Url) < 10 ||
-		//			!json.Valid([]byte(b)) ||
-		//			!strings.Contains(apiJsonInput.Url, ".") ||
-		//			!strings.Contains(apiJsonInput.Url, "://") ||
-		//			!strings.Contains(apiJsonInput.Url, "http") {
-		//			w.WriteHeader(http.StatusBadRequest)
-		//			return
-		//		}
 
-		//	a := storage.DataPut{URL1: urlP.String()}
-
-		intOut, err := storage.PutDB(loginCookie, urlP.String())
-		//	intOut, err := a.PutDB()
+		intOut, err := storage.PutDBUni(loginCookie, urlP.String())
 		if err != nil {
-			fmt.Println(`err storage storage.DataPut`)
+			if err.Error() == "Conflict" {
+				w.Header().Set("content-type", "http")
+				w.WriteHeader(http.StatusConflict)
+				w.Write([]byte(MakeString(strconv.Itoa(intOut))))
+				return
+			} else {
+				fmt.Println(`err storage storage.DataPut`)
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
 		}
 
 		urlOut := MakeString(strconv.Itoa(intOut))
@@ -180,8 +158,6 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 
 	//	map1 := make(map[int]string)
 	map1 := storage.GetDBLogin(loginCookie)
-
-	//	fmt.Println(map1)
 
 	if len(map1) < 1 {
 		w.WriteHeader(http.StatusNoContent)
@@ -227,22 +203,6 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	/*
-		urlP, err := url.Parse(string(b))
-		if err != nil {
-			zr, _ := gzip.NewReader(bytes.NewReader(b))
-			var b2 bytes.Buffer
-			b2.ReadFrom(zr)
-			zr.Close()
-
-			urlP, err = url.Parse(b2.String())
-			if err != nil {
-				fmt.Println(`err - parsing url b2`)
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
-		}
-	*/
 
 	var loginCookie string
 	login, err := r.Cookie("login")
@@ -259,11 +219,20 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	intOut, err := storage.PutDB(loginCookie, urlP.String())
+	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+
 	if err != nil {
-		fmt.Println(`err storage storage.DataPut`)
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		if err.Error() == "Conflict" {
+			w.Header().Set("content-type", "http")
+			w.WriteHeader(http.StatusConflict)
+			w.Write([]byte(MakeString(strconv.Itoa(intOut))))
+			return
+		} else {
+			fmt.Println(`err storage storage.DataPut`)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
 	}
 
 	w.Header().Set("content-type", "http")
@@ -345,8 +314,6 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		a1.NewURL = MakeString(strconv.Itoa(intOut))
 		linksBodyNew = append(linksBodyNew, a1)
 	}
-
-	fmt.Println(linksBodyNew)
 
 	urlOutByte, err := json.Marshal(linksBodyNew)
 	if err != nil {
