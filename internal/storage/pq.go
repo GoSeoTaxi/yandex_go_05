@@ -23,12 +23,13 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 	}
 
 	if err = tx.QueryRowContext(ctx, "select  last_value(id) over (order by id desc) from shortyp10 limit 1").Scan(&idLinkOld); err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			fmt.Println(`first query`)
+		} else {
+			tx.Rollback()
+			fmt.Println("Transaction rollback1!")
+		}
 
-		//	if err = tx.QueryRowContext(ctx, "select  last_value(id) over (order by id desc) from shortyp10 limit 1").Scan(&idLink); err != nil {
-		tx.Rollback()
-		fmt.Println((err))
-		fmt.Println("Transaction rollback1!")
-		return 0, err
 	}
 	//	ansIns, err = tx.QueryRowContext(ctx, "INSERT INTO shortyp10 (link, login) values ($1, $2) ON CONFLICT DO NOTHING RETURNING id", link, login)
 
@@ -58,7 +59,7 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 	}
 
 	if idLinkLast != idLink || idLinkOld == idLink {
-		fmt.Println(`КОнфликт`)
+		//	fmt.Println(`КОнфликт`)
 		return idLinkLast, fmt.Errorf("Conflict")
 	}
 	fmt.Println(`+++++++++++++++`)
