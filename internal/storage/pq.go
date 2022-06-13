@@ -62,7 +62,6 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 		//	fmt.Println(`КОнфликт`)
 		return idLinkLast, fmt.Errorf("Conflict")
 	}
-	fmt.Println(`+++++++++++++++`)
 
 	return idLink, err
 }
