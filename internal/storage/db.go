@@ -185,11 +185,16 @@ func GetDB(id int) (url2Redirect string, err error) {
 		var linkVar string
 		var isDelVar bool
 
+		fmt.Println(`+++++USE DB+++++++`)
+
 		db, err := sql.Open("postgres", StringConnect)
 		if err != nil {
 			fmt.Println(`err sql open`)
 		}
 		defer db.Close()
+
+		fmt.Println(`+++++USE ID`)
+		fmt.Println(id)
 
 		err = db.QueryRow("SELECT link, is_del FROM shortyp10 where id = $1", id).Scan(&linkVar, &isDelVar)
 		if err != nil {
@@ -199,12 +204,11 @@ func GetDB(id int) (url2Redirect string, err error) {
 			url2Redirect = linkVar
 
 			if isDelVar != false {
-
 				url2Redirect = ""
 				err = fmt.Errorf("410")
 				return url2Redirect, err
 			}
-
+			return url2Redirect, err
 		}
 
 	} else {

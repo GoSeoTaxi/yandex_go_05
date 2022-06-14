@@ -26,7 +26,7 @@ func MainServer() {
 
 	r.Get("/ping", handlers.PingGet)
 
-	r.Get(config.PathURLConf, handlers.MainHandlFuncGet)
+	r.With(handlers.SetCookies).Get(config.PathURLConf, handlers.MainHandlFuncGet)
 	r.With(handlers.SetCookies).With(handlers.Ungzip).Post(config.PathURLConf, handlers.MainHandlFuncPost)
 	//	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)
 	r.With(handlers.SetCookies).Post("/api/shorten/batch", handlers.APIJSONBatch)

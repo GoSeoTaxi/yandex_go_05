@@ -257,16 +257,18 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(`+++Получаем ID++++++++++++++++++`)
+	fmt.Println(idInput)
+	fmt.Println(`+++++++++++++++++++++`)
+
 	urlOut2redir, err := storage.GetDB(idInput)
 	if err != nil {
-
 		if err.Error() == "410" {
 			w.WriteHeader(http.StatusGone)
 			return
 		} else {
 			fmt.Println(`ERR storage DataGet`)
 		}
-
 	}
 
 	if len(urlOut2redir) > 2 {
@@ -313,6 +315,11 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println(`+++++++++++++`)
+	fmt.Println(linksBody)
+	fmt.Println(`ALL FILE`)
+	fmt.Println(`+++++++++++++++++`)
 
 	type urlInputJSONLineNew struct {
 		TempIDNew string `json:"correlation_id"`
