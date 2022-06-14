@@ -99,7 +99,7 @@ func PutDB(login, str string) (out int, err error) {
 		fmt.Println(`err sql open`)
 	}
 	defer db.Close()
-	rowIDCount := db.QueryRow("select COUNT(id) from shortyp10")
+	rowIDCount := db.QueryRow("select max(id) from shortyp10")
 	prodID := countID{}
 	err = rowIDCount.Scan(&prodID.count)
 
@@ -113,14 +113,16 @@ func PutDB(login, str string) (out int, err error) {
 	if err != nil {
 		index = len(bd)
 	} else {
-		_, err := db.Exec("insert into shortyp10 (link, login) values ($1, $2)",
-			str, login)
+
+		var ans int
+
+		err = db.QueryRow("INSERT INTO shortyp10 (link, login) values ($1, $2)  RETURNING id", str, login).Scan(&ans)
+
 		if err != nil {
 			fmt.Println(`err put`)
 			index = len(bd)
 		} else {
-			//		fmt.Println(`use PUT db`)
-			index = prodID.count
+			index = ans
 			//		fmt.Println(index)
 		}
 	}
