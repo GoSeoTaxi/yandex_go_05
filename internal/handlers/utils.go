@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/config"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
+	"time"
 )
 
 func MakeString(idItem string) string {
@@ -27,6 +28,16 @@ func asyncDel(intURL []string, login string) {
 	//но мы идём по пути минимальной реализаци по ТЗ (в данном случае по тестам)
 
 	for i := 0; i < len(intURL); i++ {
+
+		fmt.Println(`собираюсь удалить`)
+		duration := time.Second * 2
+		time.Sleep(duration)
+		fmt.Println(`САЙТ`)
+		fmt.Println(intURL[i])
+		fmt.Println(`LOGIN`)
+		fmt.Println(login)
+		fmt.Println(`Отправил`)
+
 		storage.DelPQ(intURL[i], login)
 	}
 

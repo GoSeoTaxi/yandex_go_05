@@ -17,15 +17,16 @@ func DelPQ(link, login string) {
 	defer db.Close()
 
 	//  ;
+	fmt.Println(`ВЫПОЛНЯЮ УДАЛЕНИЕ`)
+	fmt.Println(link)
+	fmt.Println(login)
+	fmt.Println(`+++++++++++++++`)
 
 	sqlStatement := `UPDATE public.shortyp10 SET is_del = true WHERE  link=$1 and login=$2;`
 	_, err = db.Exec(sqlStatement, link, login)
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	//	UPDATE public.shortyp10 SET is_del = true WHERE id = 9;
-
 }
 
 func PutPQ(link, login, stringConnect string) (int, error) {

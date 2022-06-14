@@ -19,12 +19,12 @@ func TestAPIJSON(t *testing.T) {
 	const testsTestAPIJSON = 4
 	urlTestTestAPIJSON := `{"url":"https://gmail.com"}`
 	urlTestTestAPIJSONReq := "https://gmail.com"
-	urlTestTestAPIRequest := `2` //переменная для теста json
+	urlTestTestAPIRequest := `0` //переменная для теста json
 
 	cointTestsTestAPIJSON := 0
 
 	//проверка на ошибку по пустой базе
-	idTest := "0"
+	idTest := "2"
 	stringRequest1 := config.ServerHost + ":" + config.Port + config.PathURLConf + "?" + config.ConstGetEndPoint + "=" + idTest
 	req1, err := http.NewRequest(http.MethodGet, stringRequest1, nil)
 	if err != nil {
@@ -61,6 +61,8 @@ func TestAPIJSON(t *testing.T) {
 	if t21.String() == urlTestTestAPIRequest && rec2.Code == http.StatusCreated {
 		cointTestsTestAPIJSON += 1
 	} else {
+		fmt.Println(t21.String())
+		fmt.Println(`is not -> `)
 		fmt.Println(urlTestTestAPIRequest)
 		fmt.Println(rec2.Code)
 		fmt.Println(`err t2.TestApiJson!!`)
