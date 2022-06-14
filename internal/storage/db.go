@@ -137,6 +137,14 @@ func PutDB(login, str string) (out int, err error) {
 }
 
 func PutDBUni(login, str string) (out int, err error) {
+
+	fmt.Println(`+++++++++++++`)
+	fmt.Println(`login`)
+	fmt.Println(login)
+	fmt.Println(`URL_STR`)
+	fmt.Println(str)
+	fmt.Println(`+++++++++++++`)
+
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
 		fmt.Println(`err sql open`)
