@@ -146,13 +146,6 @@ func PutDB(login, str string) (out int, err error) {
 
 func PutDBUni(login, str string) (out int, err error) {
 
-	fmt.Println(`+++++++++++++`)
-	fmt.Println(`login`)
-	fmt.Println(login)
-	fmt.Println(`URL_STR`)
-	fmt.Println(str)
-	fmt.Println(`+++++++++++++`)
-
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
 		fmt.Println(`err sql open`)
@@ -199,16 +192,11 @@ func GetDB(id int) (url2Redirect string, err error) {
 		var linkVar string
 		var isDelVar bool
 
-		fmt.Println(`+++++USE DB+++++++`)
-
 		db, err := sql.Open("postgres", StringConnect)
 		if err != nil {
 			fmt.Println(`err sql open`)
 		}
 		defer db.Close()
-
-		fmt.Println(`+++++USE ID`)
-		fmt.Println(id)
 
 		err = db.QueryRow("SELECT link, is_del FROM shortyp10 where id = $1", id).Scan(&linkVar, &isDelVar)
 		if err != nil {
@@ -216,12 +204,6 @@ func GetDB(id int) (url2Redirect string, err error) {
 			url2Redirect = bd[id]
 			return url2Redirect, err
 		}
-
-		fmt.Println(`++++++++RESPONSE DB`)
-		fmt.Println(linkVar)
-		fmt.Println(`++++++++RESPONSE del`)
-		fmt.Println(isDelVar)
-		fmt.Println(`++++++++++++++`)
 
 		url2Redirect = linkVar
 		if isDelVar != false {
