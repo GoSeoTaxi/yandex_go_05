@@ -19,7 +19,7 @@ func TestAPIJSON(t *testing.T) {
 	const testsTestAPIJSON = 4
 	urlTestTestAPIJSON := `{"url":"https://gmail.com"}`
 	urlTestTestAPIJSONReq := "https://gmail.com"
-	urlTestTestAPIRequest := `1` //переменная для теста json
+	urlTestTestAPIRequest := `2` //переменная для теста json
 
 	cointTestsTestAPIJSON := 0
 

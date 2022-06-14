@@ -257,10 +257,6 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(`+++Получаем ID++++++++++++++++++`)
-	fmt.Println(idInput)
-	fmt.Println(`+++++++++++++++++++++`)
-
 	urlOut2redir, err := storage.GetDB(idInput)
 	if err != nil {
 		if err.Error() == "410" {
@@ -288,11 +284,6 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(`++++++++++++++`)
-	fmt.Println(`request`)
-	fmt.Println(string(b))
-	fmt.Println(`++++++++++++++`)
-
 	var loginCookie string
 	login, err := r.Cookie("login")
 	if err != nil {
@@ -300,11 +291,6 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 	} else {
 		loginCookie = login.Value
 	}
-
-	fmt.Println(`++++++++++++++`)
-	fmt.Println(`Cookies`)
-	fmt.Println(loginCookie)
-	fmt.Println(`++++++++++++++`)
 
 	type urlInputJSONLine struct {
 		TempID string `json:"correlation_id"`
@@ -315,11 +301,6 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	fmt.Println(`+++++++++++++`)
-	fmt.Println(linksBody)
-	fmt.Println(`ALL FILE`)
-	fmt.Println(`+++++++++++++++++`)
 
 	type urlInputJSONLineNew struct {
 		TempIDNew string `json:"correlation_id"`
@@ -333,12 +314,6 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		var a1 urlInputJSONLineNew
 		a1.TempIDNew = linksBodyItem.TempID
 
-		fmt.Println(`++++++++++++++`)
-		fmt.Println(`requestBD`)
-		fmt.Println(loginCookie)
-		fmt.Println(linksBodyItem.OldURL)
-		fmt.Println(`++++++++++++++`)
-
 		intOut, err := storage.PutDB(loginCookie, linksBodyItem.OldURL)
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut Api Batch`)
@@ -346,11 +321,6 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		a1.NewURL = MakeString(strconv.Itoa(intOut))
 		linksBodyNew = append(linksBodyNew, a1)
 	}
-
-	fmt.Println(`++++++++++++++`)
-	fmt.Println(`out`)
-	fmt.Println(linksBodyNew)
-	fmt.Println(`++++++++++++++`)
 
 	urlOutByte, err := json.Marshal(linksBodyNew)
 	if err != nil {
