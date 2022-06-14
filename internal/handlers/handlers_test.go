@@ -136,7 +136,7 @@ func TestMainHandlFuncPost(t *testing.T) {
 
 	fmt.Println(`++++++++!`)
 	//проверка на ошибку по пустой базе
-	idTest := "1"
+	idTest := "3"
 	stringRequest1 := config.ServerHost + ":" + config.Port + config.PathURLConf + "?" + config.ConstGetEndPoint + "=" + idTest
 	req1, err := http.NewRequest(http.MethodGet, stringRequest1, nil)
 	if err != nil {
