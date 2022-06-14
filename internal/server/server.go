@@ -32,7 +32,7 @@ func MainServer() {
 	r.With(handlers.SetCookies).Post("/api/shorten/batch", handlers.APIJSONBatch)
 	r.With(handlers.SetCookies).Post("/api/shorten", handlers.APIJSON)
 	r.With(handlers.SetCookies).Delete("/api/user/urls", handlers.APIDelBatch)
-	r.With(handlers.SetCookies).With(handlers.Ungzip).Get("/api/user/urls", handlers.GetAPIJSONLogin)
+	r.With(handlers.SetCookies).Get("/api/user/urls", handlers.GetAPIJSONLogin)
 
 	http.ListenAndServe(":"+config.Port, r)
 
