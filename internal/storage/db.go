@@ -99,28 +99,22 @@ func PutDB(login, str string) (out int, err error) {
 		fmt.Println(`err sql open`)
 	}
 	defer db.Close()
-	ping := db.Ping()
-	if len(StringConnect) > 1 && err == nil && ping == nil {
-
-		rowIDCount := db.QueryRow("select COUNT(id) from shortyp10")
-		prodID := countID{}
-		err = rowIDCount.Scan(&prodID.count)
+	rowIDCount := db.QueryRow("select COUNT(id) from shortyp10")
+	prodID := countID{}
+	err = rowIDCount.Scan(&prodID.count)
+	if err != nil {
+		index = len(bd)
+	} else {
+		_, err := db.Exec("insert into shortyp10 (link, login) values ($1, $2)",
+			str, login)
 		if err != nil {
+			fmt.Println(`err put`)
 			index = len(bd)
 		} else {
-			_, err := db.Exec("insert into shortyp10 (link, login) values ($1, $2)",
-				str, login)
-			if err != nil {
-				fmt.Println(`err put`)
-				index = len(bd)
-			} else {
-				//		fmt.Println(`use PUT db`)
-				index = prodID.count
-				//		fmt.Println(index)
-			}
+			//		fmt.Println(`use PUT db`)
+			index = prodID.count
+			//		fmt.Println(index)
 		}
-	} else {
-		index = len(bd)
 	}
 
 	bd[index] = str
