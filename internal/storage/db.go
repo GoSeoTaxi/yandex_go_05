@@ -144,11 +144,9 @@ func PutDBUni(login, str string) (out int, err error) {
 	defer db.Close()
 	ping := db.Ping()
 	if len(StringConnect) > 1 && err == nil && ping == nil {
-
 		outInt, err := PutPQ(str, login, StringConnect)
 		if err != nil {
 			if err.Error() == "Conflict" {
-
 				return outInt, err
 			} else {
 				fmt.Println(err)
@@ -200,16 +198,22 @@ func GetDB(id int) (url2Redirect string, err error) {
 		if err != nil {
 			fmt.Println(err)
 			url2Redirect = bd[id]
-		} else {
-			url2Redirect = linkVar
-
-			if isDelVar != false {
-				url2Redirect = ""
-				err = fmt.Errorf("410")
-				return url2Redirect, err
-			}
 			return url2Redirect, err
 		}
+
+		fmt.Println(`++++++++RESPONSE DB`)
+		fmt.Println(linkVar)
+		fmt.Println(`++++++++RESPONSE del`)
+		fmt.Println(isDelVar)
+		fmt.Println(`++++++++++++++`)
+
+		url2Redirect = linkVar
+		if isDelVar != false {
+			url2Redirect = ""
+			err = fmt.Errorf("410")
+			return url2Redirect, err
+		}
+		return url2Redirect, err
 
 	} else {
 		url2Redirect = bd[id]
