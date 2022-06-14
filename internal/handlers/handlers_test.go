@@ -136,7 +136,7 @@ func TestMainHandlFuncPost(t *testing.T) {
 
 	fmt.Println(`++++++++!`)
 	//проверка на ошибку по пустой базе
-	idTest := "1"
+	idTest := "2"
 	stringRequest1 := config.ServerHost + ":" + config.Port + config.PathURLConf + "?" + config.ConstGetEndPoint + "=" + idTest
 	req1, err := http.NewRequest(http.MethodGet, stringRequest1, nil)
 	if err != nil {
@@ -174,6 +174,10 @@ func TestMainHandlFuncPost(t *testing.T) {
 	if t21.String() == stringRequest1 && rec2.Code == http.StatusCreated {
 		cointTests += 1
 	} else {
+		fmt.Println(t21.String())
+		fmt.Println(` is not ->`)
+		fmt.Println(stringRequest1)
+
 		fmt.Println(`err t2.TestMainHandlFunc`)
 	}
 

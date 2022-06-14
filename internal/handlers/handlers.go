@@ -341,6 +341,10 @@ func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(`++++++ JSON InBody`)
+	fmt.Println(bDel)
+	fmt.Println(`+++++++++`)
+
 	var loginCookie string
 	login, err := r.Cookie("login")
 	if err != nil {
@@ -354,6 +358,9 @@ func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println(`ТУТ разобранный json`)
+	fmt.Println(linksBodys)
 
 	//sendFunc
 	go asyncDel(linksBodys, loginCookie)
