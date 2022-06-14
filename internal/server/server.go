@@ -31,7 +31,7 @@ func MainServer() {
 	//	r.Post(config.PathURLConf, handlers.MainHandlFuncPost)
 	r.With(handlers.SetCookies).Post("/api/shorten/batch", handlers.APIJSONBatch)
 	r.With(handlers.SetCookies).Post("/api/shorten", handlers.APIJSON)
-	r.With(handlers.SetCookies).With(handlers.Ungzip).Delete("/api/user/urls", handlers.APIDelBatch)
+	r.With(handlers.SetCookies).Delete("/api/user/urls", handlers.APIDelBatch)
 	r.With(handlers.SetCookies).With(handlers.Ungzip).Get("/api/user/urls", handlers.GetAPIJSONLogin)
 
 	http.ListenAndServe(":"+config.Port, r)

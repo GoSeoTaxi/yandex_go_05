@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
+	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
 	_ "github.com/lib/pq"
 	"os"
 	"strconv"
@@ -178,7 +179,38 @@ func PutDBUni(login, str string) (out int, err error) {
 }
 
 func GetDB(id int) (url2Redirect string, err error) {
-	return bd[id], err
+
+	if etc.UseDB == "Y" {
+
+		var linkVar string
+		var isDelVar bool
+
+		db, err := sql.Open("postgres", StringConnect)
+		if err != nil {
+			fmt.Println(`err sql open`)
+		}
+		defer db.Close()
+
+		err = db.QueryRow("SELECT link, is_del FROM shortyp10 where id = $1", id).Scan(&linkVar, &isDelVar)
+		if err != nil {
+			fmt.Println(err)
+			url2Redirect = bd[id]
+		} else {
+			url2Redirect = linkVar
+
+			if isDelVar != false {
+
+				url2Redirect = ""
+				err = fmt.Errorf("410")
+				return url2Redirect, err
+			}
+
+		}
+
+	} else {
+		url2Redirect = bd[id]
+	}
+	return url2Redirect, err
 }
 
 func GetDBLogin(loginInt string) (mapURL map[int]string) {

@@ -6,6 +6,33 @@ import (
 	"fmt"
 )
 
+var StingConnectPQ string
+
+func DelPQ(link, login string) {
+
+	fmt.Println(`+++++++++`)
+	fmt.Println(link)
+	fmt.Println(login)
+	fmt.Println(`+++++++++`)
+
+	db, err := sql.Open("postgres", StringConnect)
+	if err != nil {
+		fmt.Println(`err sql open`)
+	}
+	defer db.Close()
+
+	//  ;
+
+	sqlStatement := `UPDATE public.shortyp10 SET is_del = true WHERE  link=$1 and login=$2;`
+	_, err = db.Exec(sqlStatement, link, login)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	//	UPDATE public.shortyp10 SET is_del = true WHERE id = 9;
+
+}
+
 func PutPQ(link, login, stringConnect string) (int, error) {
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {

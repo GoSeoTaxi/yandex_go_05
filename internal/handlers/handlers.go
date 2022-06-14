@@ -250,10 +250,6 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 
 func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 
-	//oplog := httplog.LogEntry(r.Context())
-	//oplog.Printf(http.MethodPost)
-	//	oplog.Printf(r.Body)
-
 	idInput, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		fmt.Println(`ERR - GET id`)
@@ -261,11 +257,16 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//	idGetQuery := storage.DataGet{IDURLRedirect: idInput}
-	//	urlOut2redir, err := idGetQuery.GetDB()
 	urlOut2redir, err := storage.GetDB(idInput)
 	if err != nil {
-		fmt.Println(`ERR storage DataGet`)
+
+		if err.Error() == "410" {
+			w.WriteHeader(http.StatusGone)
+			return
+		} else {
+			fmt.Println(`ERR storage DataGet`)
+		}
+
 	}
 
 	if len(urlOut2redir) > 2 {
@@ -336,7 +337,7 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 
 func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 
-	b, err := io.ReadAll(r.Body)
+	bDel, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -350,20 +351,14 @@ func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 		loginCookie = login.Value
 	}
 
-	//type urlInputJSONLine string // {}
-	//		TempID string `json:"correlation_id"`
-	//		OldURL string `json:"original_url"`
-
-	var linksBody []string
-	err = json.Unmarshal([]byte(b), &linksBody)
+	var linksBodys []string
+	err = json.Unmarshal([]byte(bDel), &linksBodys)
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println(`=!=`)
 	}
 
-	fmt.Println(string(b))
-
-	fmt.Println(`++++` + loginCookie)
+	//sendFunc
+	go asyncDel(linksBodys, loginCookie)
 	w.WriteHeader(http.StatusAccepted)
 
 	/*
