@@ -340,6 +340,11 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		linksBodyNew = append(linksBodyNew, a1)
 	}
 
+	fmt.Println(`++++++++++++++`)
+	fmt.Println(`out`)
+	fmt.Println(linksBodyNew)
+	fmt.Println(`++++++++++++++`)
+
 	urlOutByte, err := json.Marshal(linksBodyNew)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
