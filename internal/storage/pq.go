@@ -44,26 +44,23 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 		fmt.Println(`err start ctx`)
 	}
 
-	/* Это проверка на первую запись, а нужна ли она?*/
-	/*
-		if err = tx.QueryRowContext(ctx, "select  last_value(id) over (order by id desc) from shortyp10 limit 1").Scan(&idLinkOld); err != nil {
-			if err.Error() == "sql: no rows in result set" {
-				fmt.Println(`first query`)
+	if err = tx.QueryRowContext(ctx, "select  last_value(id) over (order by id desc) from shortyp10 limit 1").Scan(&idLinkOld); err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			fmt.Println(`first query`)
 
-				_, err = db.Exec("INSERT INTO shortyp10 (link, login, is_del) 	VALUES ('localhost', 'anonimus', DEFAULT);")
-				if err != nil {
-					fmt.Println(err)
-				}
-
-				idLinkOld = 1
-
-			} else {
-				tx.Rollback()
-				fmt.Println("Transaction rollback1!")
+			_, err = db.Exec("INSERT INTO shortyp10 (link, login, is_del) 	VALUES ('localhost', 'anonimus', DEFAULT);")
+			if err != nil {
+				fmt.Println(err)
 			}
 
+			idLinkOld = 1
+
+		} else {
+			tx.Rollback()
+			fmt.Println("Transaction rollback1!")
 		}
-	*/
+
+	}
 
 	//	ansIns, err = tx.QueryRowContext(ctx, "INSERT INTO shortyp10 (link, login) values ($1, $2) ON CONFLICT DO NOTHING RETURNING id", link, login)
 	//	if err = tx.QueryRowContext(ctx, "INSERT INTO shortyp10(link, login) VALUES ($1, $2) ON CONFLICT (link) DO UPDATE SET link=$1 RETURNING id", link, login).Scan(&idLinkLast); err != nil {
