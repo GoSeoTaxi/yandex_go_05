@@ -34,7 +34,11 @@ type countID struct {
 //}
 
 //Хранение значений
-var bd = map[int]string{}
+var bd = map[int]string{
+	0: "t0",
+	1: "t1",
+}
+
 var useBD = map[string]map[int]string{}
 
 //var useBD = map[string]map[int]string{}
