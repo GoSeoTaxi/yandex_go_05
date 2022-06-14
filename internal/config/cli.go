@@ -67,6 +67,12 @@ func InitCLI() {
 			fmt.Println(err)
 		}
 
+		_, err = db.Exec("INSERT INTO shortyp10 (link, login, is_del) 	VALUES ('0', '0', DEFAULT);")
+		//	"create unique index if not exists shortyp10_link_uindex\n    on shortyp10 (link);")
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		fmt.Println(`use db`)
 		etc.UseDB = "Y"
 
