@@ -102,6 +102,14 @@ func PutDB(login, str string) (out int, err error) {
 	rowIDCount := db.QueryRow("select COUNT(id) from shortyp10")
 	prodID := countID{}
 	err = rowIDCount.Scan(&prodID.count)
+
+	fmt.Println(`++++++++!`)
+	fmt.Println(`Проверка строк в бд`)
+	fmt.Println(prodID.count)
+	fmt.Println(`Печать err`)
+	fmt.Println(err)
+	fmt.Println(`++++++++!`)
+
 	if err != nil {
 		index = len(bd)
 	} else {
