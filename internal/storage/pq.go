@@ -10,11 +10,6 @@ var StingConnectPQ string
 
 func DelPQ(link, login string) {
 
-	fmt.Println(`+++++++++`)
-	fmt.Println(link)
-	fmt.Println(login)
-	fmt.Println(`+++++++++`)
-
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
 		fmt.Println(`err sql open`)

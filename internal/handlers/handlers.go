@@ -286,6 +286,11 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(`++++++++++++++`)
+	fmt.Println(`request`)
+	fmt.Println(string(b))
+	fmt.Println(`++++++++++++++`)
+
 	var loginCookie string
 	login, err := r.Cookie("login")
 	if err != nil {
@@ -293,6 +298,11 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 	} else {
 		loginCookie = login.Value
 	}
+
+	fmt.Println(`++++++++++++++`)
+	fmt.Println(`Cookies`)
+	fmt.Println(loginCookie)
+	fmt.Println(`++++++++++++++`)
 
 	type urlInputJSONLine struct {
 		TempID string `json:"correlation_id"`
@@ -315,6 +325,12 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 
 		var a1 urlInputJSONLineNew
 		a1.TempIDNew = linksBodyItem.TempID
+
+		fmt.Println(`++++++++++++++`)
+		fmt.Println(`requestBD`)
+		fmt.Println(loginCookie)
+		fmt.Println(linksBodyItem.OldURL)
+		fmt.Println(`++++++++++++++`)
 
 		intOut, err := storage.PutDB(loginCookie, linksBodyItem.OldURL)
 		if err != nil {
