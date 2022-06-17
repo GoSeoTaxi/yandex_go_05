@@ -194,6 +194,9 @@ func PutDBUni(login, str string) (out int, err error) {
 		writeFile(index, str)
 	}
 
+	fmt.Println(`Что мы отдаём? - PutDBUni`)
+	fmt.Println(index)
+
 	return index, err
 }
 

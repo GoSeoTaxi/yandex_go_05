@@ -32,12 +32,6 @@ func DelPQ(link, login string) {
 
 func PutPQ(link, login, stringConnect string) (int, error) {
 
-	fmt.Println(`++++++++++++++++++`)
-	fmt.Println(login)
-	fmt.Println(`++++++++++`)
-	fmt.Println(link)
-	fmt.Println(`++++++++++++++++++`)
-
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
 		fmt.Println(`err open sql`)

@@ -346,6 +346,8 @@ func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(`++++++ JSON InBody`)
 	fmt.Println(bDel)
+	fmt.Println(`+++++++++ string => `)
+	fmt.Println(string(bDel))
 	fmt.Println(`+++++++++`)
 
 	var loginCookie string
