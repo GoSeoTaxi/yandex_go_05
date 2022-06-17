@@ -82,7 +82,7 @@ func ResoreDB(fileName string) (status string, err error) {
 			bd[intKEYDB] = "http" + inputMap[1]
 		}
 	}
-	file.Close()
+
 	return status, err
 }
 
@@ -93,6 +93,12 @@ func writeFile(indInt int, data string) {
 }
 
 func PutDB(login, str string) (out int, err error) {
+
+	fmt.Println(`++++++++++++++++++`)
+	fmt.Println(login)
+	fmt.Println(`++++++++++`)
+	fmt.Println(str)
+	fmt.Println(`++++++++++++++++++`)
 
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
@@ -146,6 +152,12 @@ func PutDB(login, str string) (out int, err error) {
 
 func PutDBUni(login, str string) (out int, err error) {
 
+	fmt.Println(`++++++++++++++++++`)
+	fmt.Println(login)
+	fmt.Println(`++++++++++`)
+	fmt.Println(str)
+	fmt.Println(`++++++++++++++++++`)
+
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
 		fmt.Println(`err sql open`)
@@ -155,7 +167,7 @@ func PutDBUni(login, str string) (out int, err error) {
 	if len(StringConnect) > 1 && err == nil && ping == nil {
 		outInt, err := PutPQ(str, login, StringConnect)
 		if err != nil {
-			if err.Error() == "Conflict" {
+			if err.Error() == etc.ErrNameConlict {
 				return outInt, err
 			} else {
 				fmt.Println(err)

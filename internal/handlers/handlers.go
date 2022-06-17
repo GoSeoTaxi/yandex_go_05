@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
 	"io"
 	"io/ioutil"
@@ -12,6 +13,8 @@ import (
 	"net/url"
 	"strconv"
 )
+
+const minLetterOnSringHTTP = 10
 
 func SetCookies(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +95,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if len(urlP.String()) < 10 ||
+		if len(urlP.String()) < minLetterOnSringHTTP ||
 			!json.Valid([]byte(b)) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -110,7 +113,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		var confl int
 		intOut, err := storage.PutDBUni(loginCookie, urlP.String())
 		if err != nil {
-			if err.Error() == "Conflict" {
+			if err.Error() == etc.ErrNameConlict {
 
 				confl = 1
 				//w.Header().Set("content-type", "http")
@@ -206,7 +209,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len((b)) < 10 {
+	if len((b)) < minLetterOnSringHTTP {
 		fmt.Println(`URL -no correct`)
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -230,7 +233,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
 
 	if err != nil {
-		if err.Error() == "Conflict" {
+		if err.Error() == etc.ErrNameConlict {
 			w.Header().Set("content-type", "http")
 			w.WriteHeader(http.StatusConflict)
 			w.Write([]byte(MakeString(strconv.Itoa(intOut))))

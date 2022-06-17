@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
 )
 
 var StingConnectPQ string
@@ -30,6 +31,13 @@ func DelPQ(link, login string) {
 }
 
 func PutPQ(link, login, stringConnect string) (int, error) {
+
+	fmt.Println(`++++++++++++++++++`)
+	fmt.Println(login)
+	fmt.Println(`++++++++++`)
+	fmt.Println(link)
+	fmt.Println(`++++++++++++++++++`)
+
 	db, err := sql.Open("postgres", StringConnect)
 	if err != nil {
 		fmt.Println(`err open sql`)
@@ -91,7 +99,7 @@ func PutPQ(link, login, stringConnect string) (int, error) {
 
 	if idLinkLast != idLink || idLinkOld == idLink {
 		//	fmt.Println(`КОнфликт`)
-		return idLinkLast, fmt.Errorf("Conflict")
+		return idLinkLast, fmt.Errorf(etc.ErrNameConlict)
 	}
 
 	return idLink, err
