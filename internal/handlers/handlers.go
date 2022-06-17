@@ -132,7 +132,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println(`+++++++`)
-		fmt.Println(`Что мы отдали?`)
+		fmt.Println(`1_Что мы отдали тесту?`)
 		fmt.Println(urlOutMap)
 		fmt.Println(`+++++++`)
 
@@ -247,8 +247,12 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-
 	}
+
+	fmt.Println(`+++++++`)
+	fmt.Println(`2_Что мы отдали тесту?`)
+	fmt.Println(MakeString(strconv.Itoa(intOut)))
+	fmt.Println(`+++++++`)
 
 	w.Header().Set("content-type", "http")
 	w.WriteHeader(http.StatusCreated)
