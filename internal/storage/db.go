@@ -11,8 +11,6 @@ import (
 	"strings"
 )
 
-var StringConnect string
-
 type StorageBD interface {
 	PutDB(user, data string) (int, error)
 	PutDBUni(login, str string) (out int, err error)
@@ -27,6 +25,8 @@ type StorageBD interface {
 type countID struct {
 	count int
 }
+
+var StringConnect string
 
 //type DataPut struct {
 //	URL1 string
@@ -47,18 +47,6 @@ var useBD = map[string]map[int]string{}
 //var useBD = map[string]map[int]string{}
 var index int
 var fileNameDB string
-
-func PingDB() bool {
-
-	db, err := sql.Open("postgres", StringConnect)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	defer db.Close()
-
-	return true
-}
 
 func ResoreDB(fileName string) (status string, err error) {
 	if len(fileName) < 1 {
@@ -105,64 +93,6 @@ func writeFile(indInt int, data string) {
 	f, _ := os.OpenFile(fileNameDB, os.O_APPEND|os.O_WRONLY, 0600)
 	defer f.Close()
 	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
-}
-
-func PutDB(login, str string) (out int, err error) {
-
-	fmt.Println(`++++++++++++++++++`)
-	fmt.Println(login)
-	fmt.Println(`++++++++++`)
-	fmt.Println(str)
-	fmt.Println(`++++++++++++++++++`)
-
-	db, err := sql.Open("postgres", StringConnect)
-	if err != nil {
-		fmt.Println(`err sql open`)
-	}
-	defer db.Close()
-	rowIDCount := db.QueryRow("select max(id) from shortyp10")
-	prodID := countID{}
-	err = rowIDCount.Scan(&prodID.count)
-
-	fmt.Println(`++++++++!`)
-	fmt.Println(`Проверка строк в бд`)
-	fmt.Println(prodID.count)
-	fmt.Println(`Печать err`)
-	fmt.Println(err)
-	fmt.Println(`++++++++!`)
-
-	if err != nil {
-		index = len(bd)
-	} else {
-
-		var ans int
-
-		err = db.QueryRow("INSERT INTO shortyp10 (link, login) values ($1, $2)  RETURNING id", str, login).Scan(&ans)
-
-		if err != nil {
-			fmt.Println(`err put`)
-			index = len(bd)
-		} else {
-			index = ans
-			//		fmt.Println(index)
-		}
-	}
-
-	bd[index] = str
-
-	map1 := useBD[login]
-	if len(map1) == 0 {
-		map1 = make(map[int]string)
-	}
-	map1[index] = str
-	useBD[login] = map1
-
-	if fileNameDB != "" {
-		writeFile(index, str)
-	}
-	//Тут добавить условие, если переменная окружения с файлом больше 1, то записываем данные в файл через функцию
-
-	return index, err
 }
 
 func PutDBUni(login, str string) (out int, err error) {
@@ -213,40 +143,6 @@ func PutDBUni(login, str string) (out int, err error) {
 	fmt.Println(index)
 
 	return index, err
-}
-
-func GetDB(id int) (url2Redirect string, err error) {
-
-	if etc.UseDB == "Y" {
-
-		var linkVar string
-		var isDelVar bool
-
-		db, err := sql.Open("postgres", StringConnect)
-		if err != nil {
-			fmt.Println(`err sql open`)
-		}
-		defer db.Close()
-
-		err = db.QueryRow("SELECT link, is_del FROM shortyp10 where id = $1", id).Scan(&linkVar, &isDelVar)
-		if err != nil {
-			fmt.Println(err)
-			url2Redirect = bd[id]
-			return url2Redirect, err
-		}
-
-		url2Redirect = linkVar
-		if isDelVar != false {
-			url2Redirect = ""
-			err = fmt.Errorf("410")
-			return url2Redirect, err
-		}
-		return url2Redirect, err
-
-	} else {
-		url2Redirect = bd[id]
-	}
-	return url2Redirect, err
 }
 
 func GetDBLogin(loginInt string) (mapURL map[int]string) {

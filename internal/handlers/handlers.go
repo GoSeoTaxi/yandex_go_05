@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
+	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -103,7 +104,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		loginCookie := checkLogin(*r)
 
 		var confl bool
-		intOut, err := bd1db.PutDBUni(loginCookie, urlP.String())
+		intOut, err := storage.PutDBUni(loginCookie, urlP.String())
 		if err != nil {
 			if err.Error() == etc.ErrNameConlict {
 				confl = true
@@ -159,7 +160,7 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 
 	//	map1 := make(map[int]string)
 
-	map1 := bd1db.GetDBLogin(loginCookie) // storage.GetDBLogin(loginCookie)
+	map1 := storage.GetDBLogin(loginCookie) // storage.GetDBLogin(loginCookie)
 
 	if len(map1) < 1 {
 		w.WriteHeader(http.StatusNoContent)
@@ -214,8 +215,11 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	fmt.Println(`++++++!!!1`)
 
-	intOut, err := bd1db.PutDBUni(loginCookie, urlP.String())
+	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+
+	fmt.Println(`++++++!!!2`)
 
 	if err != nil {
 		if err.Error() == etc.ErrNameConlict {
@@ -249,7 +253,9 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	urlOut2redir, err := bd1db.GetDB(idInput)
+	c := storage.GetDBT{idInput}
+	urlOut2redir, err := storage.GetDBer.GetDBs(c)
+
 	if err != nil {
 		if err.Error() == "410" {
 			w.WriteHeader(http.StatusGone)
@@ -308,7 +314,11 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		var a1 urlInputJSONLineNew
 		a1.TempIDNew = linksBodyItem.TempID
 
-		intOut, err := bd1db.PutDB(loginCookie, linksBodyItem.OldURL)
+		//	intOut, err := bd1db.PutDB(loginCookie, linksBodyItem.OldURL)
+
+		c := storage.PutDBT{loginCookie, linksBodyItem.OldURL}
+		intOut, err := storage.PutDBer.PutDBs(c)
+
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut Api Batch`)
 		}
