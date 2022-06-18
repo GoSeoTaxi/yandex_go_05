@@ -13,12 +13,15 @@ import (
 
 var StringConnect string
 
-type Storage interface {
+type StorageBD interface {
 	PutDB(user, data string) (int, error)
+	PutDBUni(login, str string) (out int, err error)
 	GetDB(idItem int) (string, error)
 	GetDBLogin(login string) map[int]string
 	ResoreDB(file string) error
 	CheckLoginDB(login string) string
+	DelPQ(link, login string)
+	PingDB() bool
 }
 
 type countID struct {
@@ -44,6 +47,18 @@ var useBD = map[string]map[int]string{}
 //var useBD = map[string]map[int]string{}
 var index int
 var fileNameDB string
+
+func PingDB() bool {
+
+	db, err := sql.Open("postgres", StringConnect)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer db.Close()
+
+	return true
+}
 
 func ResoreDB(fileName string) (status string, err error) {
 	if len(fileName) < 1 {

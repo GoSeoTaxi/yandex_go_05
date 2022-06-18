@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
-	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -101,17 +100,10 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		var loginCookie string
-		login, err := r.Cookie("login")
-		if err != nil {
-			//	w.WriteHeader(http.StatusBadRequest)
-			//	return
-			loginCookie = "anonimus"
-		} else {
-			loginCookie = login.Value
-		}
+		loginCookie := checkLogin(*r)
+
 		var confl bool
-		intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+		intOut, err := bd1db.PutDBUni(loginCookie, urlP.String())
 		if err != nil {
 			if err.Error() == etc.ErrNameConlict {
 				confl = true
@@ -163,16 +155,11 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var loginCookie string
-	login, err := r.Cookie("login")
-	if err != nil {
-		loginCookie = "anonimus"
-	} else {
-		loginCookie = login.Value
-	}
+	loginCookie := checkLogin(*r)
 
 	//	map1 := make(map[int]string)
-	map1 := storage.GetDBLogin(loginCookie)
+
+	map1 := bd1db.GetDBLogin(loginCookie) // storage.GetDBLogin(loginCookie)
 
 	if len(map1) < 1 {
 		w.WriteHeader(http.StatusNoContent)
@@ -219,13 +206,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var loginCookie string
-	login, err := r.Cookie("login")
-	if err != nil {
-		loginCookie = "anonimus"
-	} else {
-		loginCookie = login.Value
-	}
+	loginCookie := checkLogin(*r)
 
 	urlP, err := url.Parse(string(b))
 	if err != nil {
@@ -234,7 +215,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+	intOut, err := bd1db.PutDBUni(loginCookie, urlP.String())
 
 	if err != nil {
 		if err.Error() == etc.ErrNameConlict {
@@ -268,7 +249,7 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	urlOut2redir, err := storage.GetDB(idInput)
+	urlOut2redir, err := bd1db.GetDB(idInput)
 	if err != nil {
 		if err.Error() == "410" {
 			w.WriteHeader(http.StatusGone)
@@ -295,14 +276,16 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var loginCookie string
-	login, err := r.Cookie("login")
-	if err != nil {
-		loginCookie = "anonimus"
-	} else {
-		loginCookie = login.Value
-	}
-
+	loginCookie := checkLogin(*r)
+	/*
+		var loginCookie string
+		login, err := r.Cookie("login")
+		if err != nil {
+			loginCookie = "anonimus"
+		} else {
+			loginCookie = login.Value
+		}
+	*/
 	type urlInputJSONLine struct {
 		TempID string `json:"correlation_id"`
 		OldURL string `json:"original_url"`
@@ -325,7 +308,7 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 		var a1 urlInputJSONLineNew
 		a1.TempIDNew = linksBodyItem.TempID
 
-		intOut, err := storage.PutDB(loginCookie, linksBodyItem.OldURL)
+		intOut, err := bd1db.PutDB(loginCookie, linksBodyItem.OldURL)
 		if err != nil {
 			fmt.Println(`err storage storage.DataPut Api Batch`)
 		}
@@ -358,13 +341,7 @@ func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(string(bDel))
 	fmt.Println(`+++++++++`)
 
-	var loginCookie string
-	login, err := r.Cookie("login")
-	if err != nil {
-		loginCookie = "anonimus"
-	} else {
-		loginCookie = login.Value
-	}
+	loginCookie := checkLogin(*r)
 
 	var linksBodys []string
 	err = json.Unmarshal([]byte(bDel), &linksBodys)

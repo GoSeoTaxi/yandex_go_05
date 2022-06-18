@@ -6,8 +6,11 @@ import (
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/config"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
+	"net/http"
 	"time"
 )
+
+var bd1db storage.StorageBD
 
 func MakeString(idItem string) string {
 	return config.ServerHost + ":" + config.Port + config.PathURLConf + "?" + config.ConstGetEndPoint + "=" + idItem
@@ -38,7 +41,17 @@ func asyncDel(intURL []string, login string) {
 		fmt.Println(login)
 		fmt.Println(`Отправил`)
 
-		storage.DelPQ(url, login)
+		bd1db.DelPQ(url, login)
 	}
+}
 
+func checkLogin(req http.Request) string {
+	var loginCookie string
+	login, err := req.Cookie("login")
+	if err != nil {
+		loginCookie = "anonimus"
+	} else {
+		loginCookie = login.Value
+	}
+	return loginCookie
 }
