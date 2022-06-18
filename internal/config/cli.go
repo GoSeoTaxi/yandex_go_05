@@ -69,10 +69,15 @@ func InitCLI() {
 
 		fmt.Println(`use db`)
 		etc.UseDB = "Y"
-
 	} else {
 		fmt.Println(`DB - DIE`)
-		storage.ResoreDB(fileStoragePath)
+		fileRestore := storage.RestoreDBFile{fileStoragePath}
+		str123, err := storage.StorageBD.ResoreDBFile(fileRestore)
+		if err != nil {
+			fmt.Println(`Ошибка восстановления`)
+		}
+		fmt.Println(str123)
+		//	storage.ResoreDB(fileStoragePath)
 	}
 
 	storage.StringConnect = DBStringConnect

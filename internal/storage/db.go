@@ -2,9 +2,7 @@ package storage
 
 import (
 	"bufio"
-	"database/sql"
 	"fmt"
-	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
 	_ "github.com/lib/pq"
 	"os"
 	"strconv"
@@ -12,43 +10,17 @@ import (
 )
 
 type StorageBD interface {
-	PutDB(user, data string) (int, error)
-	PutDBUni(login, str string) (out int, err error)
-	GetDB(idItem int) (string, error)
-	GetDBLogin(login string) map[int]string
-	ResoreDB(file string) error
-	CheckLoginDB(login string) string
-	DelPQ(link, login string)
-	PingDB() bool
+	ResoreDBFile() (string, error)
 }
 
-type countID struct {
-	count int
+type RestoreDBFile struct {
+	FileName string
 }
 
-var StringConnect string
+func (p RestoreDBFile) ResoreDBFile() (status string, err error) {
 
-//type DataPut struct {
-//	URL1 string
-//}
+	fileName := p.FileName
 
-//type DataGet struct {
-//	IDURLRedirect int
-//}
-
-//Хранение значений
-var bd = map[int]string{
-	0: "t0",
-	1: "t1",
-}
-
-var useBD = map[string]map[int]string{}
-
-//var useBD = map[string]map[int]string{}
-var index int
-var fileNameDB string
-
-func ResoreDB(fileName string) (status string, err error) {
 	if len(fileName) < 1 {
 		status = "NO FILE"
 		return status, err
@@ -89,67 +61,35 @@ func ResoreDB(fileName string) (status string, err error) {
 	return status, err
 }
 
+type countID struct {
+	count int
+}
+
+var StringConnect string
+
+//Хранение значений
+var bd = map[int]string{
+	0: "t0",
+	1: "t1",
+}
+
+var useBD = map[string]map[int]string{}
+
+//var useBD = map[string]map[int]string{}
+var index int
+var fileNameDB string
+
 func writeFile(indInt int, data string) {
 	f, _ := os.OpenFile(fileNameDB, os.O_APPEND|os.O_WRONLY, 0600)
 	defer f.Close()
 	f.WriteString(strconv.Itoa(indInt) + "|" + data + "\n")
 }
 
-func PutDBUni(login, str string) (out int, err error) {
-
-	fmt.Println(`++++++++++++++++++`)
-	fmt.Println(login)
-	fmt.Println(`++++++++++`)
-	fmt.Println(str)
-	fmt.Println(`++++++++++++++++++`)
-
-	db, err := sql.Open("postgres", StringConnect)
-	if err != nil {
-		fmt.Println(`err sql open`)
-	}
-	defer db.Close()
-	ping := db.Ping()
-	if len(StringConnect) > 1 && err == nil && ping == nil {
-		outInt, err := PutPQ(str, login, StringConnect)
-		if err != nil {
-			if err.Error() == etc.ErrNameConlict {
-				return outInt, err
-			} else {
-				fmt.Println(err)
-				fmt.Println(`err - put dbpq`)
-			}
-
-		} else {
-			index = outInt
-		}
-	} else {
-		index = len(bd)
-	}
-
-	bd[index] = str
-
-	map1 := useBD[login]
-	if len(map1) == 0 {
-		map1 = make(map[int]string)
-	}
-	map1[index] = str
-	useBD[login] = map1
-
-	if fileNameDB != "" {
-		writeFile(index, str)
-	}
-
-	fmt.Println(`Что мы отдаём? - PutDBUni`)
-	fmt.Println(index)
-
-	return index, err
-}
-
-func GetDBLogin(loginInt string) (mapURL map[int]string) {
-	mapURL = useBD[loginInt]
-	//	fmt.Println(map1)
-	return mapURL
-}
+//func GetDBLogin(loginInt string) (mapURL map[int]string) {
+//	mapURL = useBD[loginInt]
+//	//	fmt.Println(map1)
+//	return mapURL
+//}
 
 func CheckLoginDB(login string) (status string) {
 

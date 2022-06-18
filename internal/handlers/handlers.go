@@ -104,7 +104,12 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 		loginCookie := checkLogin(*r)
 
 		var confl bool
-		intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+
+		//	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+
+		c := storage.PutDBUniT{loginCookie, urlP.String()}
+		intOut, err := storage.PutDBUnier.PutDBUnis(c)
+
 		if err != nil {
 			if err.Error() == etc.ErrNameConlict {
 				confl = true
@@ -114,6 +119,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 				//return
 			} else {
 				fmt.Println(`err storage storage.DataPut`)
+				confl = false
 				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
@@ -160,7 +166,9 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 
 	//	map1 := make(map[int]string)
 
-	map1 := storage.GetDBLogin(loginCookie) // storage.GetDBLogin(loginCookie)
+	//	map1 := storage.GetDBLogin(loginCookie) // storage.GetDBLogin(loginCookie)
+
+	map1 := storage.GetDBLoginer.GetDBLogins(storage.GetDBLoginT{loginCookie})
 
 	if len(map1) < 1 {
 		w.WriteHeader(http.StatusNoContent)
@@ -217,7 +225,9 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(`++++++!!!1`)
 
-	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+	//	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
+	c := storage.PutDBUniT{loginCookie, urlP.String()}
+	intOut, err := storage.PutDBUnier.PutDBUnis(c)
 
 	fmt.Println(`++++++!!!2`)
 

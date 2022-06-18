@@ -41,7 +41,8 @@ func asyncDel(intURL []string, login string) {
 		fmt.Println(login)
 		fmt.Println(`Отправил`)
 
-		bd1db.DelPQ(url, login)
+		//тут дописать формирование пакета запросов и отправку в интерфейс
+		storage.DelPQ(url, login)
 	}
 }
 
