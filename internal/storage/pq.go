@@ -29,8 +29,6 @@ func (s TdelPQALL) IDelPQALLs() (string, error) {
 		fmt.Println(`ALL KILL`)
 	}
 
-	var err error
-
 	rows, err := etc.DB1.Query(`SELECT ID FROM public.shortyp10;`)
 	if err != nil {
 		fmt.Println(err)
