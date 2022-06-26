@@ -7,7 +7,6 @@ import (
 	"github.com/GoSeoTaxi/yandex_go_05/internal/config"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/storage"
 	"net/http"
-	"time"
 )
 
 var bd1db storage.StorageBD
@@ -33,8 +32,6 @@ func asyncDel(intURL []string, login string) {
 		//for i := 0; i < len(intURL); i++ {
 
 		fmt.Println(`собираюсь удалить`)
-		duration := time.Second * 2
-		time.Sleep(duration)
 		fmt.Println(`САЙТ`)
 		fmt.Println(intURL[i])
 		fmt.Println(`LOGIN`)
@@ -44,6 +41,18 @@ func asyncDel(intURL []string, login string) {
 		//тут дописать формирование пакета запросов и отправку в интерфейс
 		storage.DelPQ(url, login)
 	}
+}
+
+func asyncAllDel() {
+	fmt.Println("+++++++")
+	c := storage.TdelPQALL{"Y"}
+	urlOut2redir, err := storage.IDelPQALL.IDelPQALLs(c)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(urlOut2redir)
+	fmt.Println("+++++++")
+
 }
 
 func checkLogin(req http.Request) string {

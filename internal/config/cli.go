@@ -67,6 +67,8 @@ func InitCLI() {
 			fmt.Println(err)
 		}
 
+		go etc.InitDBEtc1(DBStringConnect)
+
 		fmt.Println(`use db`)
 		etc.UseDB = "Y"
 	} else {

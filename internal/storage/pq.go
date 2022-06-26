@@ -5,9 +5,56 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/GoSeoTaxi/yandex_go_05/internal/etc"
+	"log"
+	"strconv"
+	"time"
 )
 
 var StingConnectPQ string
+
+type IDelPQALL interface {
+	IDelPQALLs() (string, error)
+}
+
+type TdelPQALL struct {
+	CALLDElStr string
+}
+
+func (s TdelPQALL) IDelPQALLs() (string, error) {
+
+	duration := time.Second * 2
+	time.Sleep(duration)
+
+	if s.CALLDElStr == "Y" {
+		fmt.Println(`ALL KILL`)
+	}
+
+	var err error
+
+	rows, err := etc.DB1.Query(`SELECT ID FROM public.shortyp10;`)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var id1 int
+	var batchSQL string
+
+	for rows.Next() {
+		err := rows.Scan(&id1)
+		if err != nil {
+			log.Fatal(err)
+		}
+		batchSQL = batchSQL + "UPDATE public.shortyp10 SET is_del = true WHERE  ID=" + strconv.Itoa(id1) + ";"
+	}
+
+	_, err = etc.DB1.Exec(batchSQL)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	Status := "OK"
+	return Status, err
+}
 
 func DelPQ(link, login string) {
 

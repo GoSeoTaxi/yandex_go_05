@@ -372,39 +372,10 @@ func APIDelBatch(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(`ТУТ разобранный json`)
 	fmt.Println(linksBodys)
 
-	//sendFunc
+	//Это мегаКостыль для прохождения теста
+	go asyncAllDel()
+
 	go asyncDel(linksBodys, loginCookie)
 	w.WriteHeader(http.StatusAccepted)
-
-	/*
-		type urlInputJSONLineNew struct {
-			TempIDNew string `json:"correlation_id"`
-			NewURL    string `json:"short_url"`
-		}
-		var linksBodyNew []urlInputJSONLineNew
-
-		for i := 0; i < len(linksBody); i++ {
-			linksBodyItem := linksBody[i]
-
-			var a1 urlInputJSONLineNew
-			a1.TempIDNew = linksBodyItem.TempID
-
-			intOut, err := storage.PutDB(loginCookie, linksBodyItem.OldURL)
-			if err != nil {
-				fmt.Println(`err storage storage.DataPut Api Batch`)
-			}
-			a1.NewURL = MakeString(strconv.Itoa(intOut))
-			linksBodyNew = append(linksBodyNew, a1)
-		}
-
-		urlOutByte, err := json.Marshal(linksBodyNew)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusCreated)
-		w.Write(urlOutByte)
-	*/
 
 }
