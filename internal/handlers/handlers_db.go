@@ -23,7 +23,7 @@ func PingGet(w http.ResponseWriter, r *http.Request) {
 	c := storage.PingDBT{}
 	resp := storage.StoragePing.PingDBTs(c)
 
-	if resp != true {
+	if !resp {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

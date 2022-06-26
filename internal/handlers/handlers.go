@@ -141,7 +141,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.Header().Set("content-type", "application/json")
-		if confl == false {
+		if !confl {
 			w.WriteHeader(http.StatusCreated)
 		} else {
 			w.WriteHeader(http.StatusConflict)
