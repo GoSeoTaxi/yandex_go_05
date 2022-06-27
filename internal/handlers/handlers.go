@@ -107,7 +107,7 @@ func APIJSON(w http.ResponseWriter, r *http.Request) {
 
 		//	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
 
-		c := storage.PutDBUniT{loginCookie, urlP.String()}
+		c := storage.PutDBUniT{LoginCookie: loginCookie, Links: urlP.String()}
 		intOut, err := storage.PutDBUnier.PutDBUnis(c)
 
 		if err != nil {
