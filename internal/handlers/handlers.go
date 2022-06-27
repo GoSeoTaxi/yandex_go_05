@@ -168,7 +168,7 @@ func GetAPIJSONLogin(w http.ResponseWriter, r *http.Request) {
 
 	//	map1 := storage.GetDBLogin(loginCookie) // storage.GetDBLogin(loginCookie)
 
-	map1 := storage.GetDBLoginer.GetDBLogins(storage.GetDBLoginT{loginCookie})
+	map1 := storage.GetDBLoginer.GetDBLogins(storage.GetDBLoginT{Login: loginCookie})
 
 	if len(map1) < 1 {
 		w.WriteHeader(http.StatusNoContent)
@@ -225,9 +225,7 @@ func MainHandlFuncPost(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(`++++++!!!1`)
 
-	//	intOut, err := storage.PutDBUni(loginCookie, urlP.String())
-	c := storage.PutDBUniT{loginCookie, urlP.String()}
-	intOut, err := storage.PutDBUnier.PutDBUnis(c)
+	intOut, err := storage.PutDBUnier.PutDBUnis(storage.PutDBUniT{LoginCookie: loginCookie, Links: urlP.String()})
 
 	fmt.Println(`++++++!!!2`)
 
@@ -263,7 +261,7 @@ func MainHandlFuncGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c := storage.GetDBT{idInput}
+	c := storage.GetDBT{IDItem: idInput}
 	urlOut2redir, err := storage.GetDBer.GetDBs(c)
 
 	if err != nil {
@@ -326,7 +324,7 @@ func APIJSONBatch(w http.ResponseWriter, r *http.Request) {
 
 		//	intOut, err := bd1db.PutDB(loginCookie, linksBodyItem.OldURL)
 
-		c := storage.PutDBT{loginCookie, linksBodyItem.OldURL}
+		c := storage.PutDBT{LoginCookie: loginCookie, Links: linksBodyItem.OldURL}
 		intOut, err := storage.PutDBer.PutDBs(c)
 
 		if err != nil {

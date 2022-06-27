@@ -37,7 +37,7 @@ func (p GetDBT) GetDBs() (url2Redirect string, err error) {
 		}
 
 		url2Redirect = linkVar
-		if isDelVar != false {
+		if isDelVar {
 			url2Redirect = ""
 			err = fmt.Errorf("410")
 			return url2Redirect, err

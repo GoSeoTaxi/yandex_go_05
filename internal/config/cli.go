@@ -73,7 +73,7 @@ func InitCLI() {
 		etc.UseDB = "Y"
 	} else {
 		fmt.Println(`DB - DIE`)
-		fileRestore := storage.RestoreDBFile{fileStoragePath}
+		fileRestore := storage.RestoreDBFile{FileName: fileStoragePath}
 		str123, err := storage.StorageBD.ResoreDBFile(fileRestore)
 		if err != nil {
 			fmt.Println(`Ошибка восстановления`)

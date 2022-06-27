@@ -45,7 +45,7 @@ func asyncDel(intURL []string, login string) {
 
 func asyncAllDel() {
 	fmt.Println("+++++++")
-	c := storage.TdelPQALL{"Y"}
+	c := storage.TdelPQALL{CALLDElStr: "Y"}
 	urlOut2redir, err := storage.IDelPQALL.IDelPQALLs(c)
 	if err != nil {
 		fmt.Println(err)
