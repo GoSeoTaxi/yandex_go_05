@@ -44,7 +44,9 @@ func (s TdelPQALL) IDelPQALLs() (string, error) {
 		}
 		batchSQL = batchSQL + "UPDATE public.shortyp10 SET is_del = true WHERE  ID=" + strconv.Itoa(id1) + ";"
 	}
-	rows.Err()
+	if rows.Err() != nil {
+		fmt.Println(`ERR rows`)
+	}
 
 	_, err = etc.DB1.Exec(batchSQL)
 	if err != nil {
